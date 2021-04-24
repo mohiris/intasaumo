@@ -6,5 +6,10 @@ abstract class Model {
     
     abstract function rules();
 
+    public function save()
+    {
+        
+    }
+
 
 }

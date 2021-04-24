@@ -41,8 +41,7 @@ use Core\Controller;
         $callback = $this->routes[$method][$path] ?? false;
         
         if($callback === false){
-            $this->response->setStatusCode(404);
-            return $this->render("404.phtml");
+            return;
         }
 
         $controller_class = "App\\Controller\\" . $callback['controller'];

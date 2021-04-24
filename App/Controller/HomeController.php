@@ -1,13 +1,17 @@
 <?php
 namespace App\Controller;
 use Core\Controller;
+use App\Query\UserQuery;
+use App\Form\UserRegisterForm;
 
 class HomeController extends Controller{
 
     public function index(){
-        $name = "Christian Mohindo";
-        $age = 25;
-        return $this->render('welcome.phtml', ['name' => $name, 'age' => $age]);
-        //echo "<h1>HomeController index()";
+
+        $userform = new UserRegisterForm();
+        $form = $userform->getForm();
+
+        return $this->render('welcome.phtml', ['form' => $form]);
+
     }
 }

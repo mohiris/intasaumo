@@ -20,7 +20,7 @@ class Application{
     /**
     * @var Core\DB
     */
-    public DB $db;
+    public $connection;
 
     /**
      * @param array $routes
@@ -30,7 +30,8 @@ class Application{
     {
 
         $this->router = new Router($routes);
-        $this->db = new DB($db_config);
+        $db = new DB($db_config);
+        $this->connection = $db->getConnection();
         
     }
 

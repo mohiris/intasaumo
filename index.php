@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/Core/bootstrap.php";
+require_once "./Core/bootstrap.php";
 $routes = require_once "./App/Routes/web.php";
 
 use Core\Application;
@@ -11,7 +11,7 @@ $db_config = [
     'db_driver' => getenv('DB_DRIVER'),
     'db_host' => getenv('DB_HOST'),
     'db_name' => getenv('DB_NAME'),
-    'db_user' => getenv('DB_USER'),
+    'db_username' => getenv('DB_USER'),
     'db_password' => getenv('DB_PASSWORD')
 ];
 

@@ -4,7 +4,8 @@ use Core\Routing\Template;
 
 class Controller{
 
-    public function render($view, $data = []){
+    public function render($view, $data = [])
+    {
 
         $template = new Template();
         $viewContent = $template->getView($view, $data);
@@ -19,7 +20,8 @@ class Controller{
         }
     }
 
-    public function model($model){
+    public function model($model)
+    {
 
         $modelFile =  dirname(__DIR__) . DIRECTORY_SEPARATOR. "App" . DIRECTORY_SEPARATOR . "Model" . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $model . "Model.php");
 
