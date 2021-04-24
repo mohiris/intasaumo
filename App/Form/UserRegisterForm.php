@@ -15,8 +15,13 @@ class UserRegisterForm
                 ->input('lastname', 'text')
                 ->input('email', 'email')
                 ->input('password', 'password')
-                ->input('gender', 'radio', ['value' => 'homme'])
-                ->input('gender', 'radio', ['value' => 'femme']);
+                ->input('gender', 'radio', ['value' => 'homme', 'checked' => 'checked'])
+                ->input('gender', 'radio', ['value' => 'femme'])
+                ->input('fruit', 'checkbox', ['value' => 'pomme'])
+                ->input('fruit', 'checkbox', ['value' => 'poire'])
+                ->select('status', 'Je suis', ['required' => 'required', 'options' => ['étudiant', 'chômeur', 'professionel']])
+                ->textarea('contact', 'laissez-nous un message')
+                ->input('send', 'submit', ['value' => 'Contact']);
                 
         return $form->getForm();
     }

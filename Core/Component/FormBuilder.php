@@ -34,16 +34,18 @@ class FormBuilder
         return $this;
     }
 
-    public function select($name, $params = [])
+    public function select($name, $label, $params = [])
     {
         $select = new SelectField();
-        $this->form[] = $select->getField($params);
+        $this->form[] = $select->getField($name, $label, $params);
+        return $this;
     }
 
-    public function textarea($name, $params = [])
+    public function textarea($name, $label, $params = [])
     {
         $textarea = new TextareaField();
-        $this->form[] = $textarea->getField($params);
+        $this->form[] = $textarea->getField($name, $label, $params);
+        return $this;
     }
 
     /**
