@@ -1,6 +1,6 @@
 <?php
 namespace Core\Database;
-
+use Core\Database\DB;
 abstract class Model {
     public const RULE_REQUIRED = 'required';
 
@@ -8,21 +8,23 @@ abstract class Model {
     
     abstract function rules();
 
-    public function save()
+    public function save($data)
     {
-        
+        $db = DB::getConnection();
     }
 
-    public function validate()
+    public function validate($data)
     {
-        
+        foreach($data as $key => $value){
+            if(\property_exists($this, $key)){
+                $model->{$key} = $value;
+            }
+        }
     }
 
     public function errorMessages()
     {
-        return [
 
-        ]
     }
 
 
