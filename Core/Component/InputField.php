@@ -8,7 +8,7 @@ class InputField{
     {
 
         $placeholder = $params['placeholder'] ?? $name;
-        $value = $params['value'] ?? '';
+        $value = $params['value'] ?? $name;
         $min = $params['min'] ?? 3;
         $max = $params['max'] ?? 25;
         $required = $params['required'] ?? '';
@@ -23,7 +23,7 @@ class InputField{
                 </div>
                 ",
                 $name,
-                ucfirst($name),
+                ucfirst($value),
                 $type,
                 $name,
                 $name,
