@@ -9,19 +9,7 @@
 <body>
     <div class="content admin--login">
         <h1>Login to admin panel</h1>
-        <form method="POST" action="<?= "/admin/login" ?>">
-            <div class="form-group">
-                <div class="form-input">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username">
-                </div>
-                <div class="form-input">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password">
-                </div>
-                <button type="submit">Send</button>
-            </div>
-        </form>
+        <?php echo $userLogin; ?>
     </div>
 </body>
 </html>

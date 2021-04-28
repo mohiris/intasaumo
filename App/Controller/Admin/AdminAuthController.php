@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use Core\Controller;
 use Core\Http\Request;
 use Core\Http\Response;
+use App\Form\UserLoginForm;
 
 class AdminAuthController extends Controller{
 
@@ -19,7 +20,9 @@ class AdminAuthController extends Controller{
 
     public function index()
     {
-        $this->render("admin/user/login.phtml");
+        $form = new UserLoginForm();
+        $userLogin = $form->getForm();
+        $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
     }
 
     
