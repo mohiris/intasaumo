@@ -5,6 +5,7 @@ use Core\Controller;
 use Core\Http\Request;
 use Core\Http\Response;
 use App\Form\UserLoginForm;
+use App\Form\UserLostPasswordForm;
 
 class AdminAuthController extends Controller{
 
@@ -33,4 +34,10 @@ class AdminAuthController extends Controller{
         }
     }
 
+    public function indexForgotten()
+    {
+        $form = new UserLostPasswordForm();
+        $userLostPassword = $form->getForm();
+        $this->render("admin/user/lostpassword.phtml", ['userLostPassword'=>$userLostPassword]);
+    }
 }

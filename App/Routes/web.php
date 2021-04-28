@@ -16,6 +16,8 @@ $route->get('/admin', ['controller' => 'DashBoardController', 'method' => 'index
 
 $route->get('/admin/login', ['controller' => 'AdminAuthController', 'method' => 'index']);
 
+$route->get('/admin/user/lostpassword', ['controller' => 'AdminAuthController', 'method' => 'indexForgotten']);
+
 $route->get('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'create']);
 
 $route->get('/admin/article', ['controller' => 'AdminArticleController', 'method' => 'index']);
