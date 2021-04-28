@@ -11,9 +11,9 @@ class UserLoginForm
     {
 
         $form = Form::create('/admin/login')
-                ->input('Adresse e-mail:', 'email')
+                ->input('email', 'email', ['value' => 'Email'])
                 ->input('password', 'password', ['value' => 'Mot de passe'])
-                ->input('valider', 'submit', ['value' => 'Login']);
+                ->input('submit', 'submit', ['value' => 'Connexion']);
         return $form->getForm();
     }
 
