@@ -26,17 +26,18 @@ class Application{
      * @param array $routes
      * @param array $db_config
      */
-    public function __construct($routes, $db_config)
+    public function __construct($routes)
     {
 
         $this->router = new Router($routes);
-        $db = new DB($db_config);
-        $this->connection = $db->getConnection();
+    
         
     }
 
     public function run()
     {
+        $db = new DB();
+        $db->applyMigrations();
         $this->router->resolve();
     }
 }

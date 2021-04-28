@@ -6,6 +6,8 @@ use Core\Http\Request;
 use Core\Http\Response;
 use App\Form\UserLoginForm;
 use App\Form\UserLostPasswordForm;
+use App\Form\UserRegisterForm;
+use App\Model\UserModel;
 
 class AdminAuthController extends Controller{
 
@@ -19,13 +21,22 @@ class AdminAuthController extends Controller{
         $this->response = new Response();
     }
 
-    public function index()
+    public function indexLogin()
     {
         $form = new UserLoginForm();
         $userLogin = $form->getForm();
+
         $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
     }
 
+    public function indexRegister()
+    {
+
+        $form = new UserRegisterForm();
+        $userRegister = $form->getForm();
+
+        $this->render("admin/user/register.phtml", ['userRegister'=>$userRegister]);
+    }
     
     public function login()
     {
@@ -34,10 +45,4 @@ class AdminAuthController extends Controller{
         }
     }
 
-    public function indexForgotten()
-    {
-        $form = new UserLostPasswordForm();
-        $userLostPassword = $form->getForm();
-        $this->render("admin/user/lostpassword.phtml", ['userLostPassword'=>$userLostPassword]);
-    }
 }
