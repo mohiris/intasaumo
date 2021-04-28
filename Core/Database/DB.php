@@ -1,14 +1,17 @@
 <?php
 namespace Core\Database;
+use Core\Util\DotEnv;
 
 class DB extends \PDO
 {
 
-  private $instance = null;
+  private static $instance = null;
 
-  public function __construct($config)
+  public function __construct()
   {
-        $conn = $config['db_driver'].":host=".$config['db_host'].";dbname=".$config['db_name'];
+        (new DotEnv(dirname(dirname(__DIR__)) . '/.env'))->load();
+
+        $conn =  getenv('DB_DRIVER').":host=".getenv('DB_HOST').";dbname=".getenv('DB_NAME');
 
         $options = array(
           \PDO::ATTR_PERSISTENT => true,
@@ -16,7 +19,7 @@ class DB extends \PDO
         );
 
         try{
-          $this->instance = new \PDO($conn, $config['db_username'], $config['db_password'], $options);
+          self::$instance = new \PDO($conn, getenv('DB_USER'), getenv('DB_PASSWORD'), $options);
 
         }catch(\PDOException $e){
           echo $e->getMessage();
@@ -24,12 +27,74 @@ class DB extends \PDO
 
   }
 
-  public function getConnection()
+  public static function getConnection()
   {  
-    if(is_null($this->instance)){
-      $this->instance = new DB();
+    if(is_null(self::$instance)){
+      self::$instance = new DB();
     }
-    return $this->instance;
+    return self::$instance;
+  }
+
+  public function createMigrationsTable()
+  {
+    $conn = $this->getConnection();
+
+      $conn->exec("CREATE TABLE IF NOT EXISTS migrations (
+          id BIGINT(20) AUTO_INCREMENT PRIMARY KEY,
+          migration VARCHAR(255),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=INNODB CHARSET=utf8");
+  }
+
+  public function applyMigrations()
+  {
+
+    $this->createMigrationsTable();
+    $appliedMigrations = $this->getAppliedMigrations();
+
+    $newMigrations = [];
+
+    $migrations_dir = dirname(__DIR__) . DIRECTORY_SEPARATOR . "Migration";
+    $files = scandir($migrations_dir);
+    $toApply = array_diff($files, $appliedMigrations);
+
+    foreach($toApply as $migration){
+      if($migration == "." || $migration == ".."){
+        continue;
+      }
+
+      $migrations_dir . DIRECTORY_SEPARATOR . $migration;
+      $class = \pathinfo($migration, PATHINFO_FILENAME);
+      $className = "Core\\Migration\\" .$class;
+      $instance = new  $className();
+      $instance->up();
+      $newMigrations[] = $migration;
+    }
+
+    if(!empty($newMigrations)){
+      $this->saveMigrations($newMigrations);
+    }
+
+  }
+
+  public function getAppliedMigrations()
+  {
+    $conn = $this->getConnection();
+
+    $stm = $conn->prepare("SELECT migration FROM migrations");
+    $stm->execute();
+
+    return $stm->fetchAll(\PDO::FETCH_COLUMN);
+  }
+
+  public function saveMigrations($migrations)
+  {
+    $str = implode(",", array_map(fn($m) => "('$m')", $migrations));
+
+    $conn = $this->getConnection();
+
+    $stm = $conn->prepare("INSERT INTO migrations (migration) VALUES ($str)");
+    $stm->execute();
   }
 
 }
