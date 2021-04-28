@@ -1,17 +1,15 @@
 <?php
 namespace App\Form;
-use Core\Interfaces\FormInterface;
 use Core\Facade\Form;
 
-
-class UserRegisterForm
+class UserRegisterForm 
 {
 
     public function getForm()
     {
 
-        $form = Form::create('/user/register')
-                ->input('firstname', 'text' , ['min' => 10])
+        $form = Form::create('/user/login')
+                ->input('firstname', 'text', ['min' => 4, 'max' => 55, 'required' => 'required'])
                 ->input('lastname', 'text')
                 ->input('email', 'email')
                 ->input('password', 'password')
@@ -21,7 +19,7 @@ class UserRegisterForm
                 ->input('fruit', 'checkbox', ['value' => 'poire'])
                 ->select('status', 'Je suis', ['required' => 'required', 'options' => ['étudiant', 'chômeur', 'professionel']])
                 ->textarea('contact', 'laissez-nous un message')
-                ->input('send', 'submit', ['value' => 'Contact']);
+                ->input('login', 'submit', ['value' => 'login']);
                 
         return $form->getForm();
     }

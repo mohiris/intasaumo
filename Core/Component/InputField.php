@@ -1,11 +1,14 @@
 <?php
 namespace Core\Component;
 use Core\Interfaces\FormFieldInterface;
+use Core\Component\Validator;
 
 class InputField{
 
     public function getField($name, $type, $params)
     {
+
+        $validator = new Validator();
 
         $placeholder = $params['placeholder'] ?? $name;
         $value = $params['value'] ?? '';
@@ -20,6 +23,7 @@ class InputField{
                 "<div class=\"input-group\">
                     <label for=%s>%s</label>
                     <input type=%s name=%s id=%s placeholder=%s minlength=%s maxlength=%s $required />
+                    <div class=\"text-error\">%s</div>
                 </div>
                 ",
                 $name,
@@ -30,6 +34,7 @@ class InputField{
                 $placeholder,
                 $min,
                 $max,
+                $validator->hasError($name) ? $validator->hasError($name) : ''
             );
         }
 

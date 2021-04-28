@@ -11,7 +11,7 @@ class HomeController extends Controller{
         $userform = new UserRegisterForm();
         $form = $userform->getForm();
 
-        return $this->render('welcome.phtml', ['form' => $form]);
+        return $this->render('welcome.phtml', ['registerForm' => $form]);
 
     }
 }
