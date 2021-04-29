@@ -45,11 +45,4 @@ class AdminAuthController extends Controller{
             var_dump($this->request->getBody());
         }
     }
-
-    public function indexForgotten()
-    {
-        $form = new UserLostPasswordForm();
-        $userLostPassword = $form->getForm();
-        $this->render("admin/user/lostpassword.phtml", ['userLostPassword'=>$userLostPassword]);
-    }
 }
