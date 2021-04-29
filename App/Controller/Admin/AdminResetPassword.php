@@ -24,11 +24,6 @@ class AdminResetPassword extends Controller
 
         if ($this->request->isPost()){
             var_dump($this->request->getBody());
-            $selector = bin2hex(random_bytes(8));
-            $token = random_bytes(32);
-
-            $url = "http://localhost:8080/";
-
         }else{
 
         }
