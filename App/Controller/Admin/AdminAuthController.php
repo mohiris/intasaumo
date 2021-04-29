@@ -6,6 +6,7 @@ use Core\Http\Request;
 use Core\Http\Response;
 use App\Form\UserLoginForm;
 use App\Form\UserLostPasswordForm;
+use App\Form\UserResetPasswordForm;
 
 class AdminAuthController extends Controller{
 
@@ -39,5 +40,12 @@ class AdminAuthController extends Controller{
         $form = new UserLostPasswordForm();
         $userLostPassword = $form->getForm();
         $this->render("admin/user/lostpassword.phtml", ['userLostPassword'=>$userLostPassword]);
+    }
+
+    public function indexReset()
+    {
+        $form = new UserResetPasswordForm();
+        $userResetPassword = $form->getForm();
+        $this->render("admin/user/resetpassword.phtml", ['userResetPassword'=>$userResetPassword]);
     }
 }
