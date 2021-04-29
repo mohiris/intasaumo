@@ -3,7 +3,9 @@ require_once "./Core/bootstrap.php";
 $routes = require_once "./App/Routes/web.php";
 
 use Core\Application;
+use Core\Database\DB;
 use Core\Util\DotEnv;
+
 
 (new DotEnv(__DIR__ . '/.env'))->load();
 

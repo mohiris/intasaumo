@@ -2,13 +2,13 @@
 namespace Core\Migration;
 use Core\Database\DB;
 
-class m000_init{
+class users_table_migration{
     
     public function up()
     {
         $conn = DB::getConnection();
 
-        $sql = "CREATE TABLE users
+        $sql = "CREATE TABLE IF NOT EXISTS users
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
             `firstname` VARCHAR(25) NOT NULL,

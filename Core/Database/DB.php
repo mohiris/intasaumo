@@ -58,21 +58,30 @@ class DB extends \PDO
     $files = scandir($migrations_dir);
     $toApply = array_diff($files, $appliedMigrations);
 
+
     foreach($toApply as $migration){
       if($migration == "." || $migration == ".."){
         continue;
       }
 
-      $migrations_dir . DIRECTORY_SEPARATOR . $migration;
+      require_once $migrations_dir . DIRECTORY_SEPARATOR . $migration;
       $class = \pathinfo($migration, PATHINFO_FILENAME);
       $className = "Core\\Migration\\" .$class;
-      $instance = new  $className();
-      $instance->up();
-      $newMigrations[] = $migration;
+     
+
+      if(\class_exists($className)){
+        echo "here";
+        $instance = new  $className();
+        $instance->up();
+        $newMigrations[] = $migration;
+        
+      }
+
     }
 
     if(!empty($newMigrations)){
       $this->saveMigrations($newMigrations);
+
     }
 
   }
@@ -89,12 +98,15 @@ class DB extends \PDO
 
   public function saveMigrations($migrations)
   {
-    $str = implode(",", array_map(fn($m) => "('$m')", $migrations));
+    $tables = array_map(fn($m) => trim("$m", ".php"), $migrations);
 
     $conn = $this->getConnection();
+    foreach($tables as $table){
+      $newTable = "'" . $table . "'";
+      $stm = $conn->prepare("INSERT INTO migrations (migration) VALUES ($newTable)");
+      $stm->execute();
+    }
 
-    $stm = $conn->prepare("INSERT INTO migrations (migration) VALUES ($str)");
-    $stm->execute();
   }
 
 }
