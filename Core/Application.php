@@ -22,6 +22,8 @@ class Application{
     */
     public $connection;
 
+    private $status = false;
+
     /**
      * @param array $routes
      * @param array $db_config
@@ -36,8 +38,11 @@ class Application{
 
     public function run()
     {
-        $db = new DB();
-        $db->applyMigrations();
         $this->router->resolve();
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

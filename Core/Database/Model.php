@@ -8,7 +8,7 @@ abstract class Model {
     
     abstract function rules();
 
-    public function save($data)
+    public function save($query)
     {
         $db = DB::getConnection();
     }
