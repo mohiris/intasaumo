@@ -5,7 +5,6 @@ use Core\Controller;
 use Core\Http\Request;
 use Core\Http\Response;
 use App\Form\UserLoginForm;
-use App\Form\UserLostPasswordForm;
 use App\Form\UserRegisterForm;
 use App\Model\UserModel;
 use App\Form\UserResetPasswordForm;
