@@ -107,7 +107,7 @@ class Validator
 
     public function hasError($name)
     {
-        if($this->$errors){
+        if($this->errors){
 
             return $this->errors[$name];
         }
