@@ -15,7 +15,6 @@ class Validator
         foreach($data as $name => $value){
             if(property_exists($model, $name) && array_key_exists($name, $rules) && array_key_exists($name, $data)){
                 $this->check($rules[$name], $data[$name], $name);
-                echo " $name : $value <br />";
             }
         }
 
