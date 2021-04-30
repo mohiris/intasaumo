@@ -7,6 +7,7 @@ use Core\Http\Response;
 use App\Form\UserLoginForm;
 use App\Form\UserRegisterForm;
 use App\Model\UserModel;
+use Core\Component\Validator;
 
 class AdminAuthController extends Controller{
 
@@ -14,10 +15,16 @@ class AdminAuthController extends Controller{
 
     private $response;
 
+    private $validator;
+
+    private $userModel;
+
     public function __construct()
     {
         $this->request = new Request();
         $this->response = new Response();
+        $this->validator = new Validator();
+        $this->userModel = new UserModel();
     }
 
     public function indexLogin()
@@ -48,7 +55,10 @@ class AdminAuthController extends Controller{
     {
         if($this->request->isPost()){
             $data = $this->request->getBody();
-            var_dump($data);
+            $valid = $this->validator->validate($this->userModel, $data);
+            echo "<pre>";
+            var_dump($valid);
+            echo "</pre>";
             /*
             $data = $this->request->getBody();
 

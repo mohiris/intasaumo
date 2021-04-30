@@ -15,6 +15,8 @@ class UserModel extends Model
 
     private $password;
 
+    private $passwordConfirm;
+
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
@@ -67,18 +69,14 @@ class UserModel extends Model
 
     public function rules()
     {
-        $validator = new Validator();
-
-                
-        $rules = [
+        return [
             'firstname' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 25],
             'lastname' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 25],
             'username' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 25],
             'email' => ['type' => 'email',  'min' => 8, 'required' => 'required', 'max' => 25],
-            'password' => ['type' => 'string',  'min' => 6, 'required' => 'required', 'max' => 25],
-            'confirmPassword' => ['type' => 'string', 'min' => 6, 'required' => 'required', 'max' => 25, 'match' => 'password']
+            'password' => ['type' => 'password',  'min' => 6, 'required' => 'required', 'max' => 25],
+            'passwordConfirm' => ['match' => 'password']
         ];
-        $validator->setRules($this, $rules);
 
     }
 }
