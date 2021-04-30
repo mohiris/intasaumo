@@ -1,6 +1,7 @@
 <?php
 namespace Core\Database;
 use Core\Database\DB;
+use Core\Util\Hash;
 class QueryBuilder{
 
     private $fields;
@@ -16,6 +17,8 @@ class QueryBuilder{
     private $column;
 
     private $values;
+
+    private $data = [];
 
     public function select(): QueryBuilder
     {
@@ -49,9 +52,6 @@ class QueryBuilder{
         return $this;
     }
 
-    protected function setSelect()
-    {
-    }
 
     /**
      * @return string $query
@@ -63,14 +63,32 @@ class QueryBuilder{
 
     public function getResult()
     {
-        $db = new DB();
-
+      
         try{
-            $result = $this->query->fetch(PDO::FETCH_ASSOC);
-            return $result;
+            $db = new DB();
+            $pdo = $db::getConnection();
+
+            $stmt = $pdo->prepare($this->query);
+            $stmt->execute();
+            return $stmt->fetch(DB::FETCH_ASSOC);
         }catch(\PDOException $e){
             echo $e->getMessage();
         }
+    }
+
+    public function save()
+    {
+        try{
+            $db = new DB();
+            $pdo = $db::getConnection();
+            $values = array_values($this->data);
+            
+            $stmt= $pdo->prepare($this->query);
+            $stmt->execute($values);
+        }catch(\PDOException $e){
+            echo $e->getMessage();
+        }
+        return $this->data;
     }
 
 
@@ -115,8 +133,21 @@ class QueryBuilder{
         return $this;
     }
 
-    public function columns(array $columns)
+    public function columns(array $data)
     {
+       
+        $timestamp = date('Y-m-d H:i:s');
+
+        $data['created_at'] = $timestamp;
+        $data['updated_at'] = $timestamp;
+
+
+        foreach($data as $key => $value){
+            $this->data[$key] = $value;
+        }
+
+        $columns = array_keys($this->data);
+    
         $columnsStr = "";
         $last = array_pop($columns);
 
@@ -131,18 +162,13 @@ class QueryBuilder{
     }
 
 
-    public function values(array $values)
+    public function values(array $data)
     {
-        $valuesStr = "";
-        $last = array_pop($values);
-        foreach($values as $value){
-            $valuesStr .= "'$value', ";
-        }
-        $valuesStr .= "'$last');";
+        $values = array_values($this->data);
+   
+        $in = str_repeat('?,', count($values) - 1) . '?';
 
-
-        $valuesStr = "VALUES (" . $valuesStr;
-        $this->query .= $valuesStr;
+        $this->query .= " VALUES (" . $in . ");";
         return $this;
 
     }

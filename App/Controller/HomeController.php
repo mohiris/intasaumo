@@ -16,11 +16,12 @@ class HomeController extends Controller{
             'firstname' => 'Christian',
             'lastname' => 'Mohindo',
             'email' => 'email@test.com',
-            'username' => 'johnsnow'
+            'password' => 'mdrmamam',
+            'passwordConfirm' => 'mdrmamam',
         ];
 
 
-        $query = $userQuery->create($data);
+        $query = $userQuery->getById(1);
 
         return $this->render('welcome.phtml', ['registerForm' => $form, 'query' => $query]);
 

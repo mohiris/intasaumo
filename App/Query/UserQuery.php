@@ -2,6 +2,7 @@
 namespace App\Query;
 
 use Core\Database\QueryBuilder;
+use Core\Util\Hash;
 
 class UserQuery
 {
@@ -21,7 +22,7 @@ class UserQuery
     {
         $query = $this->builder->select("*")->from("users")->where("id = $id");
     
-        return $query->getQuery();
+        return $query->getResult();
     
     }
 
@@ -55,11 +56,21 @@ class UserQuery
      */
     public function create(array $data)
     {
-        $columns = array_keys($data);
-        $values = array_values($data);
+        
+        $hash = new Hash();
+        /*
+        if(array_key_exists('password', $data) && array_key_exists('passwordConfirm', $data)){
 
-        $query = $this->builder->insertInto("users")->columns($columns)->values($values);
-        return $query->getQuery();
+            $data['password_hash'] = $hash->passwordHash($data['password']);
+
+            unset($data["password"]); 
+            unset($data["passwordConfirm"]);
+
+            $query = $this->builder->insertInto("users")->columns($data)->values($data)->save();
+            return $query;
+        }
+        */
+
     }
 
     /**

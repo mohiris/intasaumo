@@ -18,3 +18,7 @@ $app->run();
 
 $email = new Email();
 $email->send('cal.intha77@gmail.com', 'cmohindo@myges.fr', 'TEST', '<h1>Hello</h1>');
+
+
+$person = ['firstname' => 'christian', 'lastname' => 'mohindo', 'age' => 25];
+
