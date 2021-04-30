@@ -29,7 +29,8 @@ class UserQuery
      */
     public function getByEmail(string $email)
     {
-
+        $query = $this->builder->select("*")->from("users")->where("email = $email");
+        return $query->getQuery();
     }
     
     /**
@@ -37,7 +38,8 @@ class UserQuery
      */
     public function getByUsername(string $username)
     {
-
+        $query = $this->builder->select("*")->from("users")->where("username = $username");
+        return $query->getQuery();
     }
 
     /**
@@ -45,7 +47,7 @@ class UserQuery
      */
     public function delete(int $id)
     {
-
+        $query = $this->builder->delete()->from("users")->where("id = $id");
     }
 
     /**
@@ -53,14 +55,14 @@ class UserQuery
      */
     public function create(array $data)
     {
-
+        $query = $this->builder->insert($data)->into("users")->where("id = $id");
     }
 
     /**
      * @param array $data
      */
-    public function update(array $data)
+    public function updateUser(array $data)
     {
-
+        $query = $this->builder->update()->set("data = $data")->where("id = $id");
     }
 }

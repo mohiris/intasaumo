@@ -20,11 +20,15 @@ class QueryBuilder{
 
     public function update(): QueryBuilder
     {
+        $this->fields = \func_get_args();
+        $this->query .= 'UPDATE ' . implode(', ', $this->fields);
         return $this;
     }
 
     public function delete(): QueryBuilder
     {
+        $this->fields = \func_get_args();
+        $this->query .= 'DELETE ' . implode(', ', $this->fields);
         return $this;
     }
 
