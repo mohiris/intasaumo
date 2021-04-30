@@ -6,112 +6,116 @@ class Validator
 {
     private $errors = [];
 
-    public function setRules(Model $model, array $rules){
-        if($model instanceof Model && !empty($rules)){
-            foreach($rules as $propertyName => $rusleArray){
-                $propertyValue = $model->{$propertyName};
+    private $password;
 
-                foreach($rulesArray as $ruleName => $ruleValue){
-                    if($ruleName == 'type' && $ruleValue == 'string'){
-                        $this->validateString($propertyName, $propertyValue);
-                    }
+    public function validate($model, $data){
+        $properties = get_object_vars($model);
+        $rules = $model->rules();
 
-                    if($ruleName == 'type' && $ruleValue == 'email'){
-                        $this->validateEmail($propertyName, $propertyValue);
-                    }
+        foreach($data as $name => $value){
+            if(property_exists($model, $name) && array_key_exists($name, $rules) && array_key_exists($name, $data)){
+                $this->check($rules[$name], $data[$name], $name);
+            }
+        }
 
-                    if($ruleName == 'min'){
-                        $this->validateMin($propertyName, $propertyValue);
-                    }
+        return $this->errors;
+        
+    }
 
-                    if($ruleName == 'max'){
-                        $this->validateMax($propertyName, $propertyValue);
-                    }
+    protected function check(array $rules, $data, $name){
 
-                    if($ruleName == 'match'){
-                        $this->validateMacth($propertyName, $propertyValue);
-                    }
-                }
+        foreach($rules as $key => $value){
+
+            if($key == 'type' && $value == 'password'){
+                $this->password = $data;
+                $this->validatePassword($data, $name);
+            }
+
+            if($key == 'type' && $value == 'string'){
+                $this->validateString($data, $name);
+            }
+
+            if($key == 'type' && $value == 'email'){
+                $this->validateEmail($data, $name);
+            }
+
+            if($key == 'required' && $value == true){
+                $this->validateRequired($data, $name);
+            }
+
+            if($key == 'min'){
+                $this->validateMin($data, $value, $name);
+            }
+            if($key == 'max'){
+                $this->validateMax($data, $value, $name);
+            }
+
+            if($key == 'match' && $value == 'password'){
+                $this->validateMatch($data, $name);
             }
         }
     }
 
-    public function validate($model, $data)
-    {
-        foreach($data as $key => $value){
-            if(\property_exists($model, $key)){
-                $model->{$key} = $value;
-            }
-        }
-
-
-        return true;
-    }
-
-    public function validateString($propertyName, $value)
+    protected function validateString($value, $name)
     {
         if(is_string($value)){
             return true;
         }
-
-        $this->errors[$propertyName] = "Invalid $propertyName : must be a string";
-        return false;
+        $this->errors[] = "Invalid $name: must be a string";
     }
 
-    public function validateEmail($propertyName, $value)
+    protected function validateEmail($value, $name)
     {
-        if(filter_var($value, FILTER_VALIDATE_EMAIL)){
-            return true;
-        }
+         if(\filter_var($value, FILTER_VALIDATE_EMAIL)){
+             return true;
+         }
 
-        $this->errors[$propertyName] = "Invalid $propertyName : must be a valid email address";
-        return false;
+         $this->errors[] = "Invalid $name: must be an email address";
     }
 
-    public function validateRequered($value)
+    protected function validateRequired($value, $name)
     {
         if(!empty($value)){
             return true;
         }
 
-        $this->errors[$propertyName] = "Invalid $propertyName : is required";
-        return false;
+        $this->errors[] = "Invalid $name: field is required";
     }
 
-    public function validateMin($propertyName, $value)
+    protected function validateMin($value, $min, $name)
     {
-        if(\strlen($value) >= $value){
+        if(strlen($value) < $min){
+            $this->errors[] = "Invalid $name: $min minimum characters";
+        }
+        return true;
+    }
+
+    protected function validateMax($value, $max, $name)
+    {
+        if(strlen($value) > $max){
+            $this->errors[] = "Invalid $name: $max minimum characters";
+        }
+
+        return true;
+    }
+
+    public function validatePassword($value, $name)
+    {
+        $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/";
+
+        if(preg_match($pattern, $value)){
             return true;
         }
-        $this->errors[$propertyName] = "Invalid $propertyName : minimum length is $value";
-        return false;
+
+        $this->errors[] = "Invalid $name must contains at least 8 characters, and with at least 1 number, 1 uppercase and 1 letter";
     }
 
-    public function validateMax($propertyName, $value)
+    protected function validateMatch($value, $name)
     {
-        if(\strlen($value) > $value){
+        if(strcmp($value, $this->password) == 0){
             return true;
         }
-        $this->errors[$propertyName] = "Invalid $propertyName : maximum length is $value";
-        return false;
-    }
 
-    public function validatePassword($propertyName, $value)
-    {
-        if($value){
-            return true;
-        }
-        $this->errors[$propertyName] = "Invalid $propertyName : must contains letters and number";
-        return false;
-    }
-
-    public function hasError($name)
-    {
-        if($this->$errors){
-
-            return $this->errors[$name];
-        }
-
-        return null;
+        $this->errors[] = "Invalid $name: must match password";
     }
 }

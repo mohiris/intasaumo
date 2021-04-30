@@ -23,7 +23,7 @@ class InputField{
                 "<div class=\"input-group\">
                     <label for=%s>%s</label>
                     <input type=%s name=%s id=%s placeholder=%s minlength=%s maxlength=%s $required />
-                    <div class=\"text-error\">%s</div>
+                    <div class=\"text-error\"></div>
                 </div>
                 ",
                 $name,
@@ -33,8 +33,7 @@ class InputField{
                 $name,
                 $placeholder,
                 $min,
-                $max,
-                $validator->hasError($name) ? $validator->hasError($name) : ''
+                $max
             );
         }
 
