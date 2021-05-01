@@ -37,6 +37,19 @@ class InputField{
             );
         }
 
+        if($type == 'submit' ){
+
+            return sprintf(
+                "<div class=\"input-group\">
+                    <input type=%s id=%s  value=%s />
+                </div>
+                ",
+                $type,
+                $name,
+                $value
+            );
+        }
+
         if($type == 'radio'){
 
             return sprintf(

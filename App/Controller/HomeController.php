@@ -10,8 +10,20 @@ class HomeController extends Controller{
 
         $userform = new UserRegisterForm();
         $form = $userform->getForm();
+        $userQuery = new UserQuery();
 
-        return $this->render('welcome.phtml', ['registerForm' => $form]);
+        $data = [
+            'firstname' => 'Christian',
+            'lastname' => 'Mohindo',
+            'email' => 'email@test.com',
+            'password' => 'mdrmamam',
+            'passwordConfirm' => 'mdrmamam',
+        ];
+
+
+        $query = $userQuery->getById(1);
+
+        return $this->render('welcome.phtml', ['registerForm' => $form, 'query' => $query]);
 
     }
 }
