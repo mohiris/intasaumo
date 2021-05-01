@@ -12,7 +12,7 @@ use Core\Component\Validator;
 use App\Query\UserQuery;
 
 class AdminAuthController extends Controller{
-    
+
     private $request;
 
     private $response;
@@ -67,6 +67,10 @@ class AdminAuthController extends Controller{
 
             if(empty($errors)){
                 $this->userQuery->create($data);
+                $form = new UserLoginForm();
+                $userLogin = $form->getForm();
+                
+                $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
             }else{
                 
                 $form = new UserRegisterForm();
