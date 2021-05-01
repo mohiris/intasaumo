@@ -2,19 +2,17 @@
 namespace Core\Migration;
 use Core\Database\DB;
 
-class articles_table_migration
+class password_reset_table_migration
 {
     public function up(){
         $conn = DB::getConnection();
 
-        $sql = "CREATE TABLE IF NOT EXISTS articles
+        $sql = "CREATE TABLE password_reset
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-            `title` VARCHAR(55) NOT NULL,
-            `slug` VARCHAR(55) NOT NULL,
-            `content` TEXT NOT NULL,
-            `tag` VARCHAR(25) NOT NULL,
-            `image` VARCHAR(255),
+            `email` VARCHAR(55) NOT NULL,
+            `token` VARCHAR(255) NOT NULL UNIQUE,
+            `expires` VARCHAR(255) NOT NULL,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         

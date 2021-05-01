@@ -23,6 +23,13 @@ $route->post('/admin/register', ['controller' => 'AdminAuthController', 'method'
 
 $route->post('/admin/login', ['controller' => 'AdminAuthController', 'method' => 'login']);
 
+$route->get('/admin/resetpassword', ['controller' => 'AdminAuthController', 'method' => 'indexReset']);
+
+$route->get('/admin/lostpassword', ['controller' => 'AdminLostPassword', 'method' => 'indexLostPassword']);
+
+$route->post('/admin/lostpassword', ['controller' => 'AdminLostPassword', 'method' => 'lostPassword']);
+
+
 $route->get('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'create']);
 
 $route->get('/admin/article', ['controller' => 'AdminArticleController', 'method' => 'index']);

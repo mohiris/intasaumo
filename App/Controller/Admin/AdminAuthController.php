@@ -7,24 +7,32 @@ use Core\Http\Response;
 use App\Form\UserLoginForm;
 use App\Form\UserRegisterForm;
 use App\Model\UserModel;
+use App\Form\UserResetPasswordForm;
 use Core\Component\Validator;
+use App\Query\UserQuery;
 
 class AdminAuthController extends Controller{
-
+    
     private $request;
 
     private $response;
 
-    private $validator;
+    private $userRegisterForm;
 
     private $userModel;
+
+    private $validator;
+
+    private $userQuery;
 
     public function __construct()
     {
         $this->request = new Request();
         $this->response = new Response();
-        $this->validator = new Validator();
+        $this->userRegisterForm = new UserRegisterForm();
         $this->userModel = new UserModel();
+        $this->validator = new Validator();
+        $this->userQuery = new UserQuery();
     }
 
     public function indexLogin()
@@ -55,25 +63,17 @@ class AdminAuthController extends Controller{
     {
         if($this->request->isPost()){
             $data = $this->request->getBody();
-            $valid = $this->validator->validate($this->userModel, $data);
-            echo "<pre>";
-            var_dump($valid);
-            echo "</pre>";
-            /*
-            $data = $this->request->getBody();
+            $errors = $this->validator->validate($this->userModel, $data);
 
-            $userModel = new UserModel();
-            $validator = new Validator();
-
-            $manager = new Manager();
-    
-            if($validator->validate($userModel, $data)){
-                $userModel->save($data);
+            if(empty($errors)){
+                $this->userQuery->create($data);
+            }else{
+                
+                $form = new UserRegisterForm();
+                $userRegister = $form->getForm();
+                
+                $this->render('admin/user/register.phtml', ['errors' => $errors, 'userRegister'=>$userRegister]);
             }
-            */
+        }
     }
-
-
-    }
-
 }
