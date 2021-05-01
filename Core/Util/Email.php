@@ -37,7 +37,7 @@ class Email
             $mail->Username   = $this->username;                     //SMTP username
             $mail->Password   = $this->password;                               //SMTP password
             $mail->SMTPSecure = 'tls';         //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-            $mail->Port       = $this->port;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+            //$mail->Port       = $this->port;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
         
             //Recipients
             $mail->setFrom($from, 'GoSchool');
