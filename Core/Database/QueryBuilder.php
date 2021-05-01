@@ -30,8 +30,12 @@ class QueryBuilder{
     public function where(): QueryBuilder
     {
         foreach(\func_get_args() as $arg){
-            $this->condition[] = $arg;
+            $arr = explode(' = ', $arg);
+            $field = $arr[0];
+            $value = $arr[1];
+            $this->condition[] = $field . " = " . "'$value'";
         }
+    
         $this->query .= ' WHERE ' . implode(', AND', $this->condition) . ";";
         return $this;
     }
