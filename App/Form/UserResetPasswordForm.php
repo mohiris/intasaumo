@@ -10,7 +10,7 @@ class UserResetPasswordForm
     public function getForm()
     {
 
-        $form = Form::create('/admin/resetPassword')
+        $form = Form::create('/admin/resetpassword')
                 ->input('password', 'password', ['value' => 'Nouveau mot de passe'])
                 ->input('password', 'password', ['value' => 'Confirmer le mot de passe'])
                 ->input('submit', 'submit', ['value' => 'Changer']);
