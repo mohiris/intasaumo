@@ -21,7 +21,7 @@ class HomeController extends Controller{
         ];
 
 
-        $query = $userQuery->getByEmail('calvin@gmail.com');
+        $query = $userQuery->getById(1);
 
         return $this->render('welcome.phtml', ['registerForm' => $form, 'query' => $query]);
 

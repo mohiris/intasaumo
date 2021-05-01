@@ -3,7 +3,7 @@ namespace App\Controller\Admin;
 
 use Core\Controller;
 use Core\Http\Request;
-use Core\Htpp\Session;
+use Core\Http\Session;
 use Core\Http\Response;
 use App\Form\UserLoginForm;
 use App\Form\UserRegisterForm;
@@ -11,6 +11,7 @@ use App\Form\UserResetPasswordForm;
 use App\Model\UserModel;
 use Core\Component\Validator;
 use App\Query\UserQuery;
+use Core\Util\Hash;
 
 class AdminAuthController extends Controller{
 
@@ -58,8 +59,24 @@ class AdminAuthController extends Controller{
     
     public function login()
     {
+        $hash = new Hash();
         if($this->request->isPost()){
-            var_dump($this->request->getBody());
+
+            $data = $this->request->getBody();
+            $user = $this->userQuery->getByEmail($data['email']);
+
+       
+
+            if( !empty($data['email']) && !empty($data['password']) ){
+         
+                if(!empty($user) && $hash->compareHash($data['password'], $user['password_hash'])){
+                        $this->request->redirect('/')->with('success', 'Connecté avec succès');
+                }
+            }else{
+
+                $this->request->redirect('/admin/login')->with('fail', 'Invalid credentials');
+            }
+
         }
     }
 

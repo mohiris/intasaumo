@@ -4,6 +4,8 @@ namespace Core\Http;
  * @class Core\Request
  * @author Christian Mohindo
  */
+use Core\Http\Session;
+
 class Request{
 
     /**
@@ -75,4 +77,18 @@ class Request{
     {
         return $this->getMethod() === 'post';
     }
+
+    public function redirect($route, $statusCode = 303)
+    {
+       
+        header('Location: ' . $route, true, $statusCode);
+        return $this;
+    }
+
+    public function with($key, $message)
+    {
+        $session = new Session();
+        $session->setMessage($key, $message);
+    }
+
 }

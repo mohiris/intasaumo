@@ -28,7 +28,7 @@ class Session{
 
     public function getMessage($key)
     {
-        return $_SESSION[self::FLASH_KEY][$key][$value] ?? null;
+        return $_SESSION[self::FLASH_KEY][$key]['value'] ?? [];
     }
 
     public function __destruct()

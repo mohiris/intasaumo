@@ -22,7 +22,7 @@ class UserQuery
     {
         $query = $this->builder->select("*")->from("users")->where("id = $id");
     
-        return $query->getQuery();
+        return $query->getResult();
     
     }
 

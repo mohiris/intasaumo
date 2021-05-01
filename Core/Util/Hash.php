@@ -18,6 +18,6 @@ class Hash{
      */
     public function compareHash(string $password, $hash): bool
     {
-        return (password_hash($password) === $hash);
+        return (password_verify($password, $hash)) ? true : false;
     }
 }

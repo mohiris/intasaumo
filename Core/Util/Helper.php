@@ -1,6 +1,6 @@
 <?php
 namespace Core\Util;
-
+use Core\Http\Session;
 class Helper
 {
     /**
@@ -20,6 +20,12 @@ class Helper
     public function getFormatedDate()
     {
         
+    }
+
+    public function getFlashMessage($key)
+    {
+        $session = new Session();
+        return $session->getMessage($key);
     }
 
 }
