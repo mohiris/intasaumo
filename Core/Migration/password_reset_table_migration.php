@@ -11,8 +11,9 @@ class password_reset_table_migration
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
             `email` VARCHAR(55) NOT NULL,
-            `token` VARCHAR(255) NOT NULL UNIQUE,
-            `expires` VARCHAR(255) NOT NULL,
+            `token` VARCHAR(255) NOT NULL,
+            `selector` VARCHAR(255) NOT NULL,
+            `expires` VARCHAR(100) NOT NULL,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         
