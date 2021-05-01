@@ -12,7 +12,7 @@ use Core\Component\Validator;
 use App\Query\UserQuery;
 
 class AdminAuthController extends Controller{
-
+    
     private $request;
 
     private $response;

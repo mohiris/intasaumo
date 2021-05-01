@@ -27,19 +27,40 @@ class UserQuery
     }
 
     /**
+     * @param string $roles
+     */
+    public function getByRole(string $roles)
+    {
+        $query = $this->builder->select("*")->from("users")->where("roles = $roles");
+        return $query->getQuery();
+    
+    }
+
+    /**
      * @param string $email
      */
     public function getByEmail(string $email)
     {
-
+        $query = $this->builder->select("*")->from("users")->where("email = $email");
+        return $query->getQuery();
     }
     
     /**
-     * @param string $username
+     * @param string $firstname
      */
-    public function getByUsername(string $username)
+    public function getByFirstname(string $firstname)
     {
+        $query = $this->builder->select("*")->from("users")->where("firstname = $firstname");
+        return $query->getQuery();
+    }
 
+    /**
+     * @param string $lastname
+     */
+    public function getByLastname(string $lastname)
+    {
+        $query = $this->builder->select("*")->from("users")->where("lastname = $lastname");
+        return $query->getQuery();
     }
 
     /**
@@ -79,6 +100,41 @@ class UserQuery
     public function update(array $data, int $id)
     {
         $query = $this->builder->update("users")->set($data)->where("id = $id");
+    }
+
+    /**
+     * @param string $roles
+     */
+    public function orderByRoles(string $roles)
+    {
+        $query = $this->builder->select("*")->from("users")->orderBy("roles", "ASC");
+        return $query->getQuery();
+    }
+
+    /**
+     * @param string $firstname
+     */
+    public function orderByFirstname(string $firstname)
+    {
+        $query = $this->builder->select("*")->from("users")->orderBy("firstname", "ASC");
+        return $query->getQuery();
+    }
+
+    /**
+     * @param string $lastname
+     */
+    public function orderByLastname(string $lastname)
+    {
+        $query = $this->builder->select("*")->from("users")->orderBy("lastname", "ASC");
+        return $query->getQuery();
+    }
+
+    /**
+     * @param int $created_at
+     */
+    public function orderByCreationDate(string $created_at)
+    {
+        $query = $this->builder->select("*")->from("users")->orderBy("created_at", "ASC");
         return $query->getQuery();
     }
 }
