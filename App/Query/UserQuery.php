@@ -22,7 +22,7 @@ class UserQuery
     {
         $query = $this->builder->select("*")->from("users")->where("id = $id");
     
-        return $query->getResult();
+        return $query->getQuery();
     
     }
 
@@ -31,7 +31,9 @@ class UserQuery
      */
     public function getByEmail(string $email)
     {
-
+        $query = $this->builder->select("*")->from("users")->where("email = $email");
+    
+        return $query->getResult();
     }
     
     /**
@@ -70,7 +72,6 @@ class UserQuery
             return $query;
         }
         
-
     }
 
     /**
