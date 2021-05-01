@@ -2,6 +2,7 @@
 namespace App\Query;
 
 use Core\Database\QueryBuilder;
+use Core\Util\Hash;
 
 class UserQuery
 {
@@ -20,7 +21,8 @@ class UserQuery
     public function getById(int $id)
     {
         $query = $this->builder->select("*")->from("users")->where("id = $id");
-        return $query->getQuery();
+    
+        return $query->getResult();
     
     }
 
@@ -67,6 +69,7 @@ class UserQuery
     public function delete(int $id)
     {
         $query = $this->builder->delete()->from("users")->where("id = $id");
+        return $query->getQuery();
     }
 
     /**
@@ -74,15 +77,29 @@ class UserQuery
      */
     public function create(array $data)
     {
-        $query = $this->builder->insert($data)->into("users")->where("id = $id");
+        
+        $hash = new Hash();
+        
+        if(array_key_exists('password', $data) && array_key_exists('passwordConfirm', $data)){
+
+            $data['password_hash'] = $hash->passwordHash($data['password']);
+
+            unset($data["password"]); 
+            unset($data["passwordConfirm"]);
+
+            $query = $this->builder->insertInto("users")->columns($data)->values($data)->save();
+            return $query;
+        }
+        
+
     }
 
     /**
      * @param array $data
      */
-    public function updateUser(array $data)
+    public function update(array $data, int $id)
     {
-        $query = $this->builder->update()->set("data = $data")->where("id = $id");
+        $query = $this->builder->update("users")->set($data)->where("id = $id");
     }
 
     /**
