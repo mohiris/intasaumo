@@ -15,10 +15,19 @@ class AdminAuthController extends Controller{
 
     private $response;
 
+    private $userRegister;
+
+    private $userModel;
+
+    private $validator;
+
     public function __construct()
     {
         $this->request = new Request();
         $this->response = new Response();
+        $this->userRegister = new UserRegisterForm();
+        $this->userModel = new UserModel();
+        $this->validator = new Validator();
     }
 
     public function indexLogin()
@@ -42,6 +51,13 @@ class AdminAuthController extends Controller{
     {
         if($this->request->isPost()){
             var_dump($this->request->getBody());
+        }
+    }
+
+    public function register()
+    {
+        if($this->request->isPost()){
+        $data = $this->request->getBody();
         }
     }
 }
