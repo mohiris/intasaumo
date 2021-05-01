@@ -16,8 +16,8 @@ use Core\Util\Email;
 $app = new Application($routes);
 $app->run();
 
-$email = new Email();
-$email->send('contact.goschool@gmail.com', 'antoine.saunier.pro@gmail.com', 'TEST', '<h1>Hello</h1>');
+/*$email = new Email();
+$email->send('contact.goschool@gmail.com', 'antoine.saunier.pro@gmail.com', 'TEST', '<h1>Hello</h1>');*/
 
 $person = ['firstname' => 'christian', 'lastname' => 'mohindo', 'age' => 25];
 
