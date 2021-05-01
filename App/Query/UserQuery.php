@@ -58,7 +58,7 @@ class UserQuery
     {
         
         $hash = new Hash();
-        /*
+        
         if(array_key_exists('password', $data) && array_key_exists('passwordConfirm', $data)){
 
             $data['password_hash'] = $hash->passwordHash($data['password']);
@@ -69,7 +69,7 @@ class UserQuery
             $query = $this->builder->insertInto("users")->columns($data)->values($data)->save();
             return $query;
         }
-        */
+        
 
     }
 
