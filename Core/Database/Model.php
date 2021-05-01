@@ -5,11 +5,15 @@ abstract class Model {
     public const RULE_REQUIRED = 'required';
 
     private $rules;
+
+    private $properties;
     
     abstract function rules();
 
     public function save($query)
-    {
+    {   
+        $properties = get_object_vars($this);
+        
         $db = DB::getConnection();
     }
 
