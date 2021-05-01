@@ -42,12 +42,9 @@ class UserQuery
     public function getByEmail(string $email)
     {
         $query = $this->builder->select("*")->from("users")->where("email = $email");
-<<<<<<< HEAD
     
         return $query->getResult();
-=======
         return $query->getQuery();
->>>>>>> c7bc64127fc9828c1ee34fb0cd22562df6eecf61
     }
     
     /**
