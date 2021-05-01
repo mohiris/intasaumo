@@ -46,6 +46,17 @@ class UserQuery
         return $query->getResult();
         return $query->getQuery();
     }
+
+    /**
+     * @param string $email
+     */
+    public function getEmail(string $email)
+    {
+        $query = $this->builder->select("email")->from("users")->where("email = $email");
+
+        return $query->getResult();
+        return $query->getQuery();
+    }
     
     /**
      * @param string $firstname

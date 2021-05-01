@@ -31,7 +31,7 @@ class LostPasswordQuery
     public function getByEmail(string $email)
     {
         $query = $this->builder->select("*")->from("password_reset")->where("email = $email");
-        return $query->getQuery();
+        return $query->getResult();
     }
 
     /**
@@ -57,19 +57,7 @@ class LostPasswordQuery
      */
     public function create(array $data)
     {
-        $selector = bin2hex(random_bytes(8));
-        $token = random_bytes(32);
-        $hashedToken = password_hash($token, PASSWORD_DEFAULT);
-        $expires = date("U") + 900;
-
-        $values = array(
-            "token" => $hashedToken,
-            "selector" => $selector,
-            "expires" => $expires,
-        );
-        $result = array_merge($data, $values);
-
-        $query = $this->builder->insertInto("password_reset")->columns($result)->values($result)->save();
+        $query = $this->builder->insertInto("password_reset")->columns($data)->values($data)->save();
         return $query;
     }
 

@@ -8,7 +8,9 @@ use Core\Controller;
 use Core\Http\Request;
 use App\Form\UserLostPasswordForm;
 use Core\Http\Response;
+use Core\Http\Session;
 use Core\Util\Email;
+use App\Query\UserQuery;
 
 
 class AdminLostPassword extends Controller
@@ -21,17 +23,23 @@ class AdminLostPassword extends Controller
 
     private $lostPasswordModel;
 
-    //private $validator;
+    private $validator;
+
+    private $userQuery;
 
     private $lostPasswordQuery;
+
+    private $session;
 
     public function __construct(){
         $this->request = new Request();
         $this->response = new Response();
         $this->userLostPasswordForm = new UserLostPasswordForm();
         $this->lostPasswordModel = new LostPasswordModel();
-        //$this->validator = new Validator();
+        $this->validator = new Validator();
+        $this->userQuery = new userQuery();
         $this->lostPasswordQuery = new LostPasswordQuery();
+        $this->session = new Session();
     }
 
     public function indexLostPassword()
@@ -44,29 +52,42 @@ class AdminLostPassword extends Controller
 
     public function lostPassword()
     {
-        if($this->request->isPost()){
-            $data = $this->request->getBody();
-            //$result = $this->lostPasswordQuery->getByEmail($data['email']);
+        $data = $this->request->getBody();
+        $errors = $this->validator->validate($this->lostPasswordModel, $data);
+        $emailTo = $data['email'];
 
-            $emailTo = $data['email'];
+        if ($this->request->isPost()) {
 
-            if ($emailTo == 'antoinesaunier2@gmail.com'){
+            if(empty($errors)){
+                if ($emailTo == implode('', $this->userQuery->getEmail($data['email']))) {
 
-                $email = new Email();
-                $email->send('contact.goschool@gmail.com', $emailTo, 'Réinitialisation de votre mot de passe goSchool', '<h1>Hello</h1>');
+                    $email = new Email();
+                    $email->send('contact.goschool@gmail.com', $emailTo, 'Réinitialisation de votre mot de passe goSchool', '<h1>Hello</h1>');
 
-                $this->lostPasswordQuery->create($data);
-                $form = new UserLostPasswordForm();
-                $userLostPasswordForm = $form->getForm();
+                    $selector = bin2hex(random_bytes(8));
+                    $token = random_bytes(32);
+                    $hashedToken = password_hash($token, PASSWORD_DEFAULT);
+                    $expires = date("U") + 900;
 
-                $this->render("admin/user/lostPasswordRequestSuccess.phtml", ['userLostPassword'=>$userLostPasswordForm]);
+                    $values = array(
+                        "token" => $hashedToken,
+                        "selector" => $selector,
+                        "expires" => $expires,
+                    );
+                    $data = array_merge($data, $values);
+
+                    $this->lostPasswordQuery->create($data);
+                    $form = new UserLostPasswordForm();
+                    $userLostPasswordForm = $form->getForm();
+
+                    $this->render("admin/user/lostPasswordRequestSuccess.phtml", ['userLostPassword' => $userLostPasswordForm]);
+                }
             }
-
-            else{
+            else {
                 $form = new UserLostPasswordForm();
                 $userLostPasswordForm = $form->getForm();
 
-                $this->render("admin/user/lostPasswordRequestFailure.phtml", ['userLostPassword'=>$userLostPasswordForm]);
+                $this->render("admin/user/lostPasswordRequestFailure.phtml", ['userLostPassword' => $userLostPasswordForm]);
             }
         }
     }

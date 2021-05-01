@@ -76,4 +76,12 @@ class LostPasswordModel
     {
         return $this->updatedAt;
     }
+
+    public function rules()
+    {
+        return [
+            'email' => ['type' => 'email',  'min' => 8, 'required' => 'required', 'max' => 55],
+        ];
+
+    }
 }
