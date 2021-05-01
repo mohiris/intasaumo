@@ -77,6 +77,11 @@ class AdminAuthController extends Controller{
                     
 
                 $this->request->redirect('/');
+                $this->userQuery->create($data);
+                $form = new UserLoginForm();
+                $userLogin = $form->getForm();
+                
+                $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
             }else{
                 
                 $form = new UserRegisterForm();
