@@ -1,7 +1,7 @@
 <?php
 namespace Core;
 use Core\Routing\Template;
-
+use Core\Http\Session;
 class Controller{
 
     public function render($view, $data = [])
