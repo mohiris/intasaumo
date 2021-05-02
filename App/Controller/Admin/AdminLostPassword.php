@@ -68,32 +68,42 @@ class AdminLostPassword extends Controller
         if ($this->request->isPost()) {
 
             if(empty($errors)){
+
                 if ($emailTo == implode('', $this->userQuery->getEmail($data['email']))) {
 
-                    $url = "http://localhost:8080/admin/resetpassword?selector=".$selector."&validator=".bin2hex($token);
-                    $message ='<div class="content email-userRegister">';
-                    $message.='<p>Nous avons reçu une demande de réinitialisation de votre mot de passe GoSchool.</p>';
-                    $message.='<p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.</p>';
-                    $message.='<p>Si la demande ne vient pas de vous, veuillez ignorer cet email.</p>';
-                    $message.='<p>Voici votre lien de réinitialisation du mot de passe : <br>';
-                    $message.='<a href="'.$url.'">'.$url.'</a></p>';
-                    $message.='</div>';
-
-                    $email = new Email();
-                    $email->send('contact.goschool@gmail.com', $emailTo, 'Réinitialisation de votre mot de passe goSchool', $message);
+                    $token = $this->token->generateToken(32);
+                    $hashedToken = $this->hashToken->passwordHash($token);
+                    $selector = $this->token->bin2hex($this->token->generateToken(8));
+                    $expires = date("U") + 900;
 
                     $values = array(
-                        "token" => $this->hashToken->passwordHash($this->token->generateToken(32)),
-                        "selector" => $this->token->bin2hex($this->token->generateToken(8)),
-                        "expires" => date("U") + 900,
+                        "token" => $hashedToken,
+                        "selector" => $selector,
+                        "expires" => $expires,
                     );
                     $data = array_merge($data, $values);
 
-                    $this->lostPasswordQuery->create($data);
-                    $form = new UserLostPasswordForm();
-                    $userLostPasswordForm = $form->getForm();
+                    if($this->lostPasswordQuery->create($data))
+                    {
+                        $url = "http://localhost:8080/admin/resetpassword";//?selector=".$selector."&validator=".$this->token->bin2hex($token)
+                        $message ='<div class="content email-userRegister">';
+                        $message.='<p>Nous avons reçu une demande de réinitialisation de votre mot de passe GoSchool.</p>';
+                        $message.='<p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.</p>';
+                        $message.='<p>Si la demande ne vient pas de vous, veuillez ignorer cet email.</p>';
+                        $message.='<p>Voici votre lien de réinitialisation du mot de passe : <br>';
+                        $message.='<a href="'.$url.'">'.$url.'</a></p>';
+                        $message.='</div>';
 
-                    $this->render("admin/user/lostPasswordRequestSuccess.phtml", ['userLostPassword' => $userLostPasswordForm]);
+                        $email = new Email();
+                        $email->send('contact.goschool@gmail.com', $emailTo, 'Réinitialisation de votre mot de passe goSchool', $message);
+
+
+
+                        $form = new UserLostPasswordForm();
+                        $userLostPasswordForm = $form->getForm();
+
+                        $this->render("admin/user/lostPasswordRequestSuccess.phtml", ['userLostPassword' => $userLostPasswordForm]);
+                    }
                 }
             }
             else {

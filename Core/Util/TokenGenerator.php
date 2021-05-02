@@ -6,7 +6,7 @@ class TokenGenerator{
     /**
      * @return string $token
      */
-    public function generateToken(int $length) : int
+    public function generateToken(string $length) : string
     {
         return random_bytes($length);
     }
