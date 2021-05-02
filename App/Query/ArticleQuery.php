@@ -64,7 +64,8 @@ class ArticleQuery
      */
     public function create(array $data)
     {
-        $query = $this->builder->insert('articles')->value($data);
+        $query = $this->builder->insertInto('articles')->columns($data)->values($data)->save();
+        return $query;
     }
 
     /**
