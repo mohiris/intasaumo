@@ -12,6 +12,7 @@ use Core\Http\Response;
 use Core\Http\Session;
 use Core\Util\Email;
 use App\Query\UserQuery;
+use Core\Util\Hash;
 use Core\Util\TokenGenerator;
 
 
@@ -35,6 +36,8 @@ class AdminLostPassword extends Controller
 
     private $token;
 
+    private $hashToken;
+
     public function __construct(){
         $this->request = new Request();
         $this->response = new Response();
@@ -44,7 +47,8 @@ class AdminLostPassword extends Controller
         $this->userQuery = new userQuery();
         $this->lostPasswordQuery = new LostPasswordQuery();
         $this->session = new Session();
-        $this->token= new TokenGenerator();
+        $this->token = new TokenGenerator();
+        $this->hashToken = new Hash();
     }
 
     public function indexLostPassword()
@@ -66,10 +70,6 @@ class AdminLostPassword extends Controller
             if(empty($errors)){
                 if ($emailTo == implode('', $this->userQuery->getEmail($data['email']))) {
 
-                    $selector = bin2hex(random_bytes(8));
-                    $token = $this->token->generateToken(32);
-                    $hashedToken = password_hash($token, PASSWORD_BCRYPT);
-                    $expires = date("U") + 900;
                     $url = "http://localhost:8080/admin/resetpassword?selector=".$selector."&validator=".bin2hex($token);
                     $message ='<div class="content email-userRegister">';
                     $message.='<p>Nous avons reçu une demande de réinitialisation de votre mot de passe GoSchool.</p>';
@@ -83,9 +83,9 @@ class AdminLostPassword extends Controller
                     $email->send('contact.goschool@gmail.com', $emailTo, 'Réinitialisation de votre mot de passe goSchool', $message);
 
                     $values = array(
-                        "token" => $hashedToken,
-                        "selector" => $selector,
-                        "expires" => $expires,
+                        "token" => $this->hashToken->passwordHash($this->token->generateToken(32)),
+                        "selector" => $this->token->bin2hex($this->token->generateToken(8)),
+                        "expires" => date("U") + 900,
                     );
                     $data = array_merge($data, $values);
 
