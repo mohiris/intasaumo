@@ -44,7 +44,6 @@ class UserQuery
         $query = $this->builder->select("*")->from("users")->where("email = $email");
     
         return $query->getResult();
-        return $query->getQuery();
     }
 
     /**
@@ -55,7 +54,6 @@ class UserQuery
         $query = $this->builder->select("email")->from("users")->where("email = $email");
 
         return $query->getResult();
-        return $query->getQuery();
     }
     
     /**
@@ -112,6 +110,7 @@ class UserQuery
     public function update(array $data, int $id)
     {
         $query = $this->builder->update("users")->set($data)->where("id = $id");
+        return $query;
     }
 
     /**

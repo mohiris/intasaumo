@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Admin;
 
+use App\Form\UserLoginForm;
 use App\Form\UserResetPasswordForm;
 use App\Model\LostPasswordModel;
 use App\Query\LostPasswordQuery;
@@ -115,10 +116,31 @@ class AdminLostPassword extends Controller
         }
     }
 
-    public function resetPassword(){
+    public function indexResetPassword(){
         $form = new UserResetPasswordForm();
         $userResetPassword = $form->getForm();
 
         $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
     }
+
+    public function resetPassword(){
+
+        if($this->request->isPost()) {
+            $data = $this->request->getBody();
+            $errors = $this->validator->validate($this->userModel, $data);
+
+            if (empty($errors)) {
+
+                if ($this->userQuery->update($data)) {
+
+                    $form = new UserLoginForm();
+                    $userLogin = $form->getForm();
+
+                    $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
+                }
+
+            }
+        }
+    }
+
 }
