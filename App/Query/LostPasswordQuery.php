@@ -35,12 +35,40 @@ class LostPasswordQuery
     }
 
     /**
-     * @param string $email
+     * @param string $token
      */
     public function getByToken(string $token)
     {
         $query = $this->builder->select("*")->from("password_reset")->where("token = $token");
-        return $query->getQuery();
+        return $query->getResult();
+    }
+
+    /**
+     * @param string $selector
+     */
+    public function getBySelector(string $selector)
+    {
+        $query = $this->builder->select("*")->from("password_reset")->where("selector = $selector");
+        return $query->getResult();
+    }
+
+    /**
+     * @param string $expires
+     */
+    public function getByExpires(string $expires)
+    {
+        $query = $this->builder->select("*")->from("password_reset")->where("expires = $expires");
+        return $query->getResult();
+    }
+
+    /**
+     * @param string $selector
+     * @param string $expires
+     */
+    public function getBySelectorAndExpires(string $selector, string $expires)
+    {
+        $query = $this->builder->select("*")->from("password_reset")->where("selector = $selector AND expires >= $expires");
+        return $query->getResult();
     }
 
     /**

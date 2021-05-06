@@ -12,7 +12,6 @@ use Core\Http\Request;
 use App\Form\UserLostPasswordForm;
 use Core\Http\Response;
 use Core\Http\Session;
-use Core\Util\Email;
 use App\Query\UserQuery;
 use Core\Util\Hash;
 use Core\Util\TokenGenerator;
@@ -22,10 +21,6 @@ class AdminLostPassword extends Controller
 {
     private $request;
 
-    private $response;
-
-    private $userLostPasswordForm;
-
     private $lostPasswordModel;
 
     private $validator;
@@ -33,8 +28,6 @@ class AdminLostPassword extends Controller
     private $userQuery;
 
     private $lostPasswordQuery;
-
-    private $session;
 
     private $token;
 
@@ -76,7 +69,7 @@ class AdminLostPassword extends Controller
                     $token = $this->token->generateToken(32);
                     $hashedToken = $this->hashToken->passwordHash($token);
                     $selector = $this->token->bin2hex($this->token->generateToken(8));
-                    $expires = date("U") + 900;
+                    $expires = date("U") + 1800;
 
                     $values = array(
                         "token" => $hashedToken,
@@ -109,29 +102,76 @@ class AdminLostPassword extends Controller
     }
 
     public function indexResetPassword(){
-        $form = new UserResetPasswordForm();
-        $userResetPassword = $form->getForm();
 
-        $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
+        if($this->request->isGet()){
+            $data = $this->request->getBody();
+            $selector = $data['selector'];
+            $validator = $data['validator'];
+
+            if (empty($selector) || empty($validator))
+            {
+                die('Impossible de valider votre requête');
+            }
+            else {
+                if (ctype_xdigit($selector) !== false && ctype_xdigit($validator) != false)
+                {
+                    $form = new UserResetPasswordForm();
+                    $userResetPassword = $form->getForm();
+                    $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
+                }
+                else{
+                    die('Impossible de valider votre requête');
+                }
+            }
+        }
     }
 
     public function resetPassword(){
 
         if($this->request->isPost()) {
+
             $data = $this->request->getBody();
+            $selector = $data['selector'];
+            $validator = $data['validator'];
+            $password = $data['password'];
+            $passwordConfirm = $data['passwordConfirm'];
+
+            if (empty($password) || empty($passwordConfirm))
+            {
+
+                $form = new UserResetPasswordForm();
+                $userResetPassword = $form->getForm();
+                $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
+                exit();
+
+            }
+            elseif ($password != $passwordConfirm)
+            {
+                $form = new UserResetPasswordForm();
+                $userResetPassword = $form->getForm();
+                $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
+                exit();
+            }
+
+            $currentDate = date('U');
+
+            if ($this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
+                echo 'Ok';
+            }
+            else {
+                echo 'expired';
+                exit();
+            }
+
+
+            /*$data = $this->request->getBody();
             $errors = $this->validator->validate($this->userModel, $data);
 
             if (empty($errors)) {
+                $this->userQuery->update($data)
 
-                if ($this->userQuery->update($data)) {
 
-                    $form = new UserLoginForm();
-                    $userLogin = $form->getForm();
-
-                    $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
-                }
-
-            }
+            }*/
         }
     }
 

@@ -21,7 +21,7 @@ class UserResetPasswordForm
                 ->input('selector', 'hidden', ['value' => $data['selector']])
                 ->input('validator', 'hidden', ['value' => $data['validator']])
                 ->input('password', 'password', ['value' => 'Nouveau mot de passe'])
-                ->input('password', 'password', ['value' => 'Confirmer le mot de passe'])
+                ->input('passwordConfirm', 'password', ['value' => 'Confirmer le mot de passe'])
                 ->input('submit', 'submit', ['value' => 'Changer']);
         return $form->getForm();
     }
