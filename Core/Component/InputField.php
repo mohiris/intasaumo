@@ -95,6 +95,18 @@ class InputField{
                 ucfirst($value),
             );   
         }
+
+        
+        if($type == 'hidden'){
+            return sprintf(
+                "<input type=%s name=%s id=%s value=%s />
+                ",
+                $type,
+                $name,
+                $name,
+                $value
+            );   
+        }
     }
 
 

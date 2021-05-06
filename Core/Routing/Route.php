@@ -13,6 +13,7 @@ class Route{
      public function get(string $path, array $callback)
      {
         $this->routes['get'][$path] = $callback;
+        return $this;
         
      }
 
@@ -24,6 +25,7 @@ class Route{
     public function post(string $path, array $callback)
     {
        $this->routes['post'][$path] = $callback;
+       return $this;
        
     }
 
@@ -32,5 +34,13 @@ class Route{
         return $this->routes;
 
      }
- 
+
+     public function middleware()
+     {
+         foreach(\func_get_args() as $middleware){
+            if($middleware == "auth"){
+               echo "Need auth";
+            }
+         }
+     } 
 }
