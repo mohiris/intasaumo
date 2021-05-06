@@ -11,7 +11,7 @@ class articles_table_migration
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
             `title` VARCHAR(55) NOT NULL,
-            `slug` VARCHAR(55) NOT NULL,
+            `slug` VARCHAR(55),
             `content` TEXT NOT NULL,
             `tag` VARCHAR(25) NOT NULL,
             `image` VARCHAR(255),
