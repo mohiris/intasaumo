@@ -33,6 +33,8 @@ $route->post('/admin/lostpassword', ['controller' => 'AdminLostPassword', 'metho
 
 $route->get('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'create']);
 
+$route->post('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'create']);
+
 $route->get('/admin/article', ['controller' => 'AdminArticleController', 'method' => 'index']);
 
 return $route->getRoutes();
