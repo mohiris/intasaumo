@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Admin;
 
+use App\Email\UserResetPasswordEmail;
 use App\Form\UserLoginForm;
 use App\Form\UserResetPasswordForm;
 use App\Model\LostPasswordModel;
@@ -86,19 +87,10 @@ class AdminLostPassword extends Controller
 
                     if($this->lostPasswordQuery->create($data))
                     {
-                        $url = "http://localhost:8080/admin/resetpassword";//?selector=".$selector."&validator=".$this->token->bin2hex($token)
-                        $message ='<div class="content email-userRegister">';
-                        $message.='<p>Nous avons reçu une demande de réinitialisation de votre mot de passe GoSchool.</p>';
-                        $message.='<p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe.</p>';
-                        $message.='<p>Si la demande ne vient pas de vous, veuillez ignorer cet email.</p>';
-                        $message.='<p>Voici votre lien de réinitialisation du mot de passe : <br>';
-                        $message.='<a href="'.$url.'">'.$url.'</a></p>';
-                        $message.='</div>';
+                        $url = "http://localhost:8080/admin/resetpassword?selector=".$selector."&validator=".$this->token->bin2hex($token);
 
-                        $email = new Email();
-                        $email->send('contact.goschool@gmail.com', $emailTo, 'Réinitialisation de votre mot de passe goSchool', $message);
-
-
+                        $email = new UserResetPasswordEmail();
+                        $userResetPasswordEmail = $email->sendEmail($emailTo, $url);
 
                         $form = new UserLostPasswordForm();
                         $userLostPasswordForm = $form->getForm();

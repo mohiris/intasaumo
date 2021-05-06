@@ -51,8 +51,10 @@ class Email
         
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->CharSet = "UTF-8";
             $mail->Subject = $subject;
-            $mail->Body    = $body;
+            //$mail->addCustomHeader();
+            $mail->Body = $body;
         
             $mail->send();
             echo 'Réussi';
