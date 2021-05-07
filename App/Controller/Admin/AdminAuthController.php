@@ -89,11 +89,10 @@ class AdminAuthController extends Controller{
             if(empty($errors)){
                 if($this->userQuery->create($data))
                 {
-                    $this->session->setMessage('success', 'Thanks for your registration.');
+                    
+                    $this->request->redirect('/admin/login')->with('success', 'Thanks for your registration.');
                 }
                     
-
-                $this->request->redirect('/');
                 $this->userQuery->create($data);
                 $form = new UserLoginForm();
                 $userLogin = $form->getForm();

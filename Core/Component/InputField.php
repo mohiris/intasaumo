@@ -96,17 +96,16 @@ class InputField{
             );   
         }
 
+        
         if($type == 'hidden'){
             return sprintf(
-                "<div class=\"input-group\">
-                    <input type=%s name=%s id=%s value=%s />
-                </div>
+                "<input type=%s name=%s id=%s value=%s />
                 ",
                 $type,
                 $name,
                 $name,
-                ucfirst($value),
-            );
+                $value
+            );   
         }
     }
 
