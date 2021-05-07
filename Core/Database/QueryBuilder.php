@@ -112,11 +112,18 @@ class QueryBuilder{
     {
         $this->fields = \func_get_args();
         $rowStr = "";
+        $lastElement = end($data);
         foreach($data as $row => $value){
             if($row == 'id'){
                 continue;
             }
-            $rowStr .= $row . ' = ' . "'$value', ";
+            elseif ($value == $lastElement)
+            {
+                $rowStr .= $row . ' = ' . "'$value' ";
+            }
+            else{
+                $rowStr .= $row . ' = ' . "'$value', ";
+            }
         }
 
         $this->query .= ' SET ' . $rowStr;
