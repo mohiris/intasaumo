@@ -154,13 +154,14 @@ class AdminLostPassword extends Controller
             }
 
             $currentDate = date('U');
+            $result =$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate);
+            print_r($result);
 
-            if ($this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
-                echo 'Ok';
+            if (!$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
+                die('expired');
             }
             else {
-                echo 'expired';
-                exit();
+                echo 'OK';
             }
 
 

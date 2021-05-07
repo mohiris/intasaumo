@@ -67,7 +67,7 @@ class LostPasswordQuery
      */
     public function getBySelectorAndExpires(string $selector, string $expires)
     {
-        $query = $this->builder->select("*")->from("password_reset")->where("selector = $selector AND expires >= $expires");
+        $query = $this->builder->select("*")->from("password_reset")->where("selector = $selector' AND expires >= '$expires");
         return $query->getResult();
     }
 
