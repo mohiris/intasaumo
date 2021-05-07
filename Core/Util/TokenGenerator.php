@@ -20,6 +20,14 @@ class TokenGenerator{
     }
 
     /**
+     * @return string $token
+     */
+    public function hex2bin(string $token) : string
+    {
+        return hex2bin($token);
+    }
+
+    /**
      * @param string $token
      * @param string $bin2hex
      * @return bool
