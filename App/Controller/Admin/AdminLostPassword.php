@@ -155,24 +155,45 @@ class AdminLostPassword extends Controller
 
             $currentDate = date('U');
             $result =$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate);
-            print_r($result);
 
             if (!$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
                 die('expired');
             }
             else {
-                echo 'OK';
+                $tokenbin = $this->token->hex2bin($validator);
+                $tokenCheck = $this->hashToken->compareHash($tokenbin, $result['token']);
+
+                if ($tokenCheck === false)
+                {
+                    die('You need to re-submit your reset request.');
+                }
+                elseif ($tokenCheck === true){
+
+                    $tokenEmail = $result['email'];
+
+                    if (!$this->userQuery->getByEmail($tokenEmail)){
+                        die('You need to re-submit your reset request.');
+                    }
+                    else{
+                        $newPasswordHash = $this->hashToken->passwordHash($password);
+                        $value = array(
+                            "password_hash" => $newPasswordHash,
+                        );
+
+                        $userUpdateQuery = new UserQuery();
+                        //var_dump($userUpdateQuery->updatePassword($value, $tokenEmail));
+
+                        if (!$userUpdateQuery->updatePassword($value, $tokenEmail))
+                        {
+                            die('You need to re-submit your reset request.');
+                        }
+                        else{
+                            echo 'Mot de passe mis à jour !';
+                        }
+                    }
+
+                }
             }
-
-
-            /*$data = $this->request->getBody();
-            $errors = $this->validator->validate($this->userModel, $data);
-
-            if (empty($errors)) {
-                $this->userQuery->update($data)
-
-
-            }*/
         }
     }
 
