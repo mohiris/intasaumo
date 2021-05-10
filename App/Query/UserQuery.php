@@ -119,7 +119,7 @@ class UserQuery
     public function updatePassword(array $data, string $email)
     {
         $query = $this->builder->update("users")->set($data)->where("email = $email");
-        return $query->getResult();
+        return $query;
     }
 
 

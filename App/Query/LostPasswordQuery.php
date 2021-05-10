@@ -81,6 +81,15 @@ class LostPasswordQuery
     }
 
     /**
+     * @param string $email
+     */
+    public function deleteByEmail(string $email)
+    {
+        $query = $this->builder->delete()->from("password_reset")->where("email = $email");
+        return $query;
+    }
+
+    /**
      * @param array $data
      */
     public function create(array $data)

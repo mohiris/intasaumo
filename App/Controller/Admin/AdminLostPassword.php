@@ -142,7 +142,6 @@ class AdminLostPassword extends Controller
                 $form = new UserResetPasswordForm();
                 $userResetPassword = $form->getForm();
                 $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
-                exit();
 
             }
             elseif ($password != $passwordConfirm)
@@ -150,14 +149,13 @@ class AdminLostPassword extends Controller
                 $form = new UserResetPasswordForm();
                 $userResetPassword = $form->getForm();
                 $this->render("admin/user/resetpassword.phtml", ['userResetPassword' => $userResetPassword]);
-                exit();
             }
 
             $currentDate = date('U');
             $result =$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate);
 
             if (!$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
-                die('expired');
+                die('Cette demande de renouvellement de mot de passe a expiré.');
             }
             else {
                 $tokenbin = $this->token->hex2bin($validator);
@@ -181,17 +179,26 @@ class AdminLostPassword extends Controller
                         );
 
                         $userUpdateQuery = new UserQuery();
-                        //var_dump($userUpdateQuery->updatePassword($value, $tokenEmail));
 
                         if (!$userUpdateQuery->updatePassword($value, $tokenEmail))
                         {
                             die('You need to re-submit your reset request.');
                         }
                         else{
-                            echo 'Mot de passe mis à jour !';
+                            $lostPasswordDelete = new LostPasswordQuery();
+
+                            if (!$lostPasswordDelete->deleteByEmail($tokenEmail))
+                            {
+                                die('There was an error !');
+                            }
+                            else{
+                                $form = new UserLoginForm();
+                                $userLogin = $form->getForm();
+
+                                $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
+                            }
                         }
                     }
-
                 }
             }
         }
