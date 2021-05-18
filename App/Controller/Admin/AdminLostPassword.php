@@ -2,7 +2,6 @@
 namespace App\Controller\Admin;
 
 use App\Email\UserResetPasswordEmail;
-use App\Form\UserLoginForm;
 use App\Form\UserResetPasswordForm;
 use App\Model\LostPasswordModel;
 use App\Query\LostPasswordQuery;
@@ -15,7 +14,6 @@ use Core\Http\Session;
 use App\Query\UserQuery;
 use Core\Util\Hash;
 use Core\Util\TokenGenerator;
-
 
 class AdminLostPassword extends Controller
 {
@@ -163,14 +161,14 @@ class AdminLostPassword extends Controller
 
                 if ($tokenCheck === false)
                 {
-                    die('You need to re-submit your reset request.');
+                    die('Il y a eu une erreur, vous devez refaire une demande de réinitialisation de mot de passe.');
                 }
                 elseif ($tokenCheck === true){
 
                     $tokenEmail = $result['email'];
 
                     if (!$this->userQuery->getByEmail($tokenEmail)){
-                        die('You need to re-submit your reset request.');
+                        die('Il y a eu une erreur, vous devez refaire une demande de réinitialisation de mot de passe.');
                     }
                     else{
                         $newPasswordHash = $this->hashToken->passwordHash($password);
@@ -182,20 +180,17 @@ class AdminLostPassword extends Controller
 
                         if (!$userUpdateQuery->updatePassword($value, $tokenEmail))
                         {
-                            die('You need to re-submit your reset request.');
+                            $this->request->redirect('/admin/lostpassword');
                         }
                         else{
                             $lostPasswordDelete = new LostPasswordQuery();
 
                             if (!$lostPasswordDelete->deleteByEmail($tokenEmail))
                             {
-                                die('There was an error !');
+                                die('Il y a eu une erreur.');
                             }
                             else{
-                                $form = new UserLoginForm();
-                                $userLogin = $form->getForm();
-
-                                $this->render("admin/user/login.phtml", ['userLogin'=>$userLogin]);
+                                $this->request->redirect('/admin/login');
                             }
                         }
                     }
