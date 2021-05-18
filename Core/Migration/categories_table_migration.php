@@ -2,7 +2,7 @@
 namespace Core\Migration;
 use Core\Database\DB;
 
-class tags_table_migration
+class categories_table_migration
 {
     public function up(){
         $conn = DB::getConnection();

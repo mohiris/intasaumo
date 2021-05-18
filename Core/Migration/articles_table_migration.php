@@ -13,23 +13,23 @@ class articles_table_migration
             `title` VARCHAR(255) NOT NULL,
             `slug` VARCHAR(255) NULL,
             `content` TEXT NULL,
-            `tags_id` BIGINT NOT NULL,
-            `categories_id` BIGINT NOT NULL,
+            `tags_id` BIGINT(20) NOT NULL,
+            `categories_id` BIGINT(20) NOT NULL,
             `image` VARCHAR(255) NULL,
             `status` VARCHAR(55) NOT NULL DEFAULT 'unpublished',
             `active_comment` TINYINT NULL DEFAULT 0,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            INDEX `fk_articles_categories1_idx` (`categories_id` ASC) VISIBLE,
-            INDEX `fk_articles_tags1_idx` (`tags_id` ASC) VISIBLE,
+            INDEX `fk_articles_categories1_idx` (`categories_id` ASC),
+            INDEX `fk_articles_tags1_idx` (`tags_id` ASC),
             CONSTRAINT `fk_articles_categories1`
                 FOREIGN KEY (`categories_id`)
-                REFERENCES `goschool`.`categories` (`id`)
+                REFERENCES `categories` (`id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION,
             CONSTRAINT `fk_articles_tags1`
                 FOREIGN KEY (`tags_id`)
-                REFERENCES `goschool`.`tags` (`id`)
+                REFERENCES `tags` (`id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION
         ) ENGINE=INNODB CHARSET=`utf8`;";

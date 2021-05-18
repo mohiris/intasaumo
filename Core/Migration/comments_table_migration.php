@@ -11,15 +11,14 @@ class comments_table_migration
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
             `content` TEXT NULL,
-            `users_id` INT NOT NULL,
+            `users_id` BIGINT(20) NOT NULL,
             `comment_parent` BIGINT NULL,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`, `users_id`),
-            INDEX `fk_comments_users_idx` (`users_id` ASC) VISIBLE,
+            INDEX `fk_comments_users_idx` (`users_id` ASC),
             CONSTRAINT `fk_comments_users`
                 FOREIGN KEY (`users_id`)
-                REFERENCES `goschool`.`users` (`id`)
+                REFERENCES `users` (`id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION
         ) ENGINE=INNODB CHARSET=`utf8`;";

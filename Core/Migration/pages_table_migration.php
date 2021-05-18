@@ -14,16 +14,16 @@ class tags_table_migration
             `url` VARCHAR(255) NOT NULL,
             `image` VARCHAR(255) NULL,
             `content` TEXT NULL,
-            `articles_id` BIGINT NOT NULL,
-            `articles_categories_id` BIGINT NOT NULL,
-            `articles_tags_id` BIGINT NOT NULL,
+            `articles_id` BIGINT(20) NOT NULL,
+            `articles_categories_id` BIGINT(20) NOT NULL,
+            `articles_tags_id` BIGINT(20) NOT NULL,
             `categorie_parent` BIGINT NULL,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            INDEX `fk_pages_articles1_idx` (`articles_id` ASC, `articles_categories_id` ASC, `articles_tags_id` ASC) VISIBLE,
+            INDEX `fk_pages_articles1_idx` (`articles_id` ASC, `articles_categories_id` ASC, `articles_tags_id` ASC),
             CONSTRAINT `fk_pages_articles1`
                 FOREIGN KEY (`articles_id` , `articles_categories_id` , `articles_tags_id`)
-                REFERENCES `goschool`.`articles` (`id` , `categories_id` , `tags_id`)
+                REFERENCES `articles` (`id` , `categories_id` , `tags_id`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION
         ) ENGINE=INNODB CHARSET=`utf8`;";
