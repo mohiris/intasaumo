@@ -29,15 +29,8 @@ $route->get('/admin/lostpassword', ['controller' => 'AdminLostPassword', 'method
 
 $route->post('/admin/lostpassword', ['controller' => 'AdminLostPassword', 'method' => 'lostPassword']);
 
-
-<<<<<<< HEAD
-$route->get('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'create'])->middleware('auth');
-=======
-$route->get('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'indexAdd']);
-
+$route->get('/admin/article', ['controller' => 'AdminArticleController', 'method' => 'indexArticle']);
+$route->get('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'add']);
 $route->post('/admin/article/add', ['controller' => 'AdminArticleController', 'method' => 'create']);
->>>>>>> b86f44221335736e9159a8127effde1636f6f91b
-
-$route->get('/admin/article', ['controller' => 'AdminArticleController', 'method' => 'index']);
 
 return $route->getRoutes();

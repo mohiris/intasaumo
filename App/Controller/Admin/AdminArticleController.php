@@ -30,7 +30,15 @@ class AdminArticleController extends Controller {
         $this->articleModel = new ArticleModel();
 
     }
-    public function indexAdd()
+
+    public function indexArticle()
+    {
+
+        $articles = $this->articleQuery->getArticles();
+        $this->render("admin/articles/list.phtml", ['articles'=>$articles]);
+    }
+
+    public function add()
     {
         $form = new ArticleAddForm();
         $addArticle = $form->getForm();
