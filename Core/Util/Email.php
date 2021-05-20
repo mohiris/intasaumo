@@ -37,7 +37,7 @@ class Email
             $mail->Username   = $this->username;                     //SMTP username
             $mail->Password   = $this->password;                               //SMTP password
             $mail->SMTPSecure = 'tls';         //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-            $mail->Port       = $this->port;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+            //$mail->Port       = $this->port;                                    //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
         
             //Recipients
             $mail->setFrom($from, 'GoSchool');
@@ -51,11 +51,13 @@ class Email
         
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->CharSet = "UTF-8";
             $mail->Subject = $subject;
-            $mail->Body    = $body;
+            //$mail->addCustomHeader();
+            $mail->Body = $body;
         
             $mail->send();
-            echo 'Message';
+            echo 'Réussi';
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }

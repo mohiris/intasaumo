@@ -10,8 +10,8 @@ class UserLostPasswordForm
     public function getForm()
     {
         $form = Form::create('/admin/lostpassword')
-            ->input('reset-password-request-email', 'email', ['value' => 'Email'])
-            ->input('reset-password-request-submit', 'submit', ['value' => 'Réinitialiser le mot de passe']);
+            ->input('email', 'email', ['value' => 'Email'])
+            ->input('submit', 'submit', ['value' => 'Réinitialiser le mot de passe']);
         return $form->getForm();
     }
 

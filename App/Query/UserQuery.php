@@ -44,7 +44,16 @@ class UserQuery
         $query = $this->builder->select("*")->from("users")->where("email = $email");
     
         return $query->getResult();
-        return $query->getQuery();
+    }
+
+    /**
+     * @param string $email
+     */
+    public function getEmail(string $email)
+    {
+        $query = $this->builder->select("email")->from("users")->where("email = $email");
+
+        return $query->getResult();
     }
     
     /**
@@ -101,7 +110,18 @@ class UserQuery
     public function update(array $data, int $id)
     {
         $query = $this->builder->update("users")->set($data)->where("id = $id");
+        return $query;
     }
+
+    /**
+     * @param array $data
+     */
+    public function updatePassword(array $data, string $email)
+    {
+        $query = $this->builder->update("users")->set($data)->where("email = $email");
+        return $query;
+    }
+
 
     /**
      * @param string $roles

@@ -23,7 +23,9 @@ $route->post('/admin/register', ['controller' => 'AdminAuthController', 'method'
 
 $route->post('/admin/login', ['controller' => 'AdminAuthController', 'method' => 'login']);
 
-$route->get('/admin/resetpassword', ['controller' => 'AdminAuthController', 'method' => 'indexReset']);
+$route->get('/admin/resetpassword', ['controller' => 'AdminLostPassword', 'method' => 'indexResetPassword']);
+
+$route->post('/admin/resetpassword', ['controller' => 'AdminLostPassword', 'method' => 'resetPassword']);
 
 $route->get('/admin/lostpassword', ['controller' => 'AdminLostPassword', 'method' => 'indexLostPassword']);
 
