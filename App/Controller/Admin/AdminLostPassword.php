@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Email\UserResetPasswordEmail;
 use App\Form\UserResetPasswordForm;
 use App\Model\LostPasswordModel;
+use App\Model\UserModel;
 use App\Query\LostPasswordQuery;
 use Core\Component\Validator;
 use Core\Controller;
@@ -37,6 +38,7 @@ class AdminLostPassword extends Controller
         $this->response = new Response();
         $this->userLostPasswordForm = new UserLostPasswordForm();
         $this->lostPasswordModel = new LostPasswordModel();
+        $this->userModel = new UserModel();
         $this->validator = new Validator();
         $this->userQuery = new userQuery();
         $this->lostPasswordQuery = new LostPasswordQuery();
@@ -131,70 +133,59 @@ class AdminLostPassword extends Controller
         if($this->request->isPost()) {
 
             $data = $this->request->getBody();
-            //$validateData = array_slice($data, 2);
-            //$errors = $this->validator->validate($this->userModel, $validateData);
+            $validateData = array_slice($data, 2);
+            $errors = $this->validator->validate($this->userModel, $validateData);
             $selector = $data['selector'];
             $validator = $data['validator'];
             $password = $data['password'];
             $passwordConfirm = $data['passwordConfirm'];
 
-            if (empty($password) || empty($passwordConfirm))
-            {
-                die();
-            }
-            elseif ($password != $passwordConfirm)
-            {
-                die();
-            }
+            if (empty($errors)) {
+                $currentDate = date('U');
+                $result = $this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate);
 
-            $currentDate = date('U');
-            $result =$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate);
+                if (!$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
+                    $this->request->redirect('/admin/lostpassword')->with('linkExpired', 'Il y a eu une erreur, ce lien de renouvellement de mot de passe a expiré.');
+                } else {
+                    $tokenbin = $this->token->hex2bin($validator);
+                    $tokenCheck = $this->hashToken->compareHash($tokenbin, $result['token']);
 
-            if (!$this->lostPasswordQuery->getBySelectorAndExpires($selector, $currentDate)) {
-                $this->request->redirect('/admin/lostpassword')->with('linkExpired', 'Il y a eu une erreur, ce lien de renouvellement de mot de passe a expiré.');
-            }
-            else {
-                $tokenbin = $this->token->hex2bin($validator);
-                $tokenCheck = $this->hashToken->compareHash($tokenbin, $result['token']);
-
-                if ($tokenCheck === false)
-                {
-                    $this->request->redirect('/admin/lostpassword')->with('errorReset', 'Il y a eu une erreur, vous devez refaire une demande de réinitialisation de mot de passe.');
-                }
-                elseif ($tokenCheck === true){
-
-                    $tokenEmail = $result['email'];
-
-                    if (!$this->userQuery->getByEmail($tokenEmail)){
+                    if ($tokenCheck === false) {
                         $this->request->redirect('/admin/lostpassword')->with('errorReset', 'Il y a eu une erreur, vous devez refaire une demande de réinitialisation de mot de passe.');
-                    }
-                    else{
-                        $newPasswordHash = $this->hashToken->passwordHash($password);
-                        $value = array(
-                            "password_hash" => $newPasswordHash,
-                        );
+                    } elseif ($tokenCheck === true) {
 
-                        $userUpdateQuery = new UserQuery();
+                        $tokenEmail = $result['email'];
 
-                        if (!$userUpdateQuery->updatePassword($value, $tokenEmail))
-                        {
+                        if (!$this->userQuery->getByEmail($tokenEmail)) {
                             $this->request->redirect('/admin/lostpassword')->with('errorReset', 'Il y a eu une erreur, vous devez refaire une demande de réinitialisation de mot de passe.');
-                        }
-                        else{
-                            $lostPasswordDelete = new LostPasswordQuery();
+                        } else {
+                            $newPasswordHash = $this->hashToken->passwordHash($password);
+                            $value = array(
+                                "password_hash" => $newPasswordHash,
+                            );
 
-                            if (!$lostPasswordDelete->deleteByEmail($tokenEmail))
-                            {
-                                $this->request->redirect('/admin/login')->with('changePasswordSuccess', 'Votre demande de réinitialisation de mot de passe a bien été prise en compte. Veuillez vous connecter.');
-                            }
-                            else{
-                                $this->request->redirect('/admin/login')->with('changePasswordSuccess', 'Votre demande de réinitialisation de mot de passe a bien été prise en compte. Veuillez vous connecter.');
+                            $userUpdateQuery = new UserQuery();
+
+                            if (!$userUpdateQuery->updatePassword($value, $tokenEmail)) {
+                                $this->request->redirect('/admin/lostpassword')->with('errorReset', 'Il y a eu une erreur, vous devez refaire une demande de réinitialisation de mot de passe.');
+                            } else {
+                                $lostPasswordDelete = new LostPasswordQuery();
+
+                                if (!$lostPasswordDelete->deleteByEmail($tokenEmail)) {
+                                    $this->request->redirect('/admin/login')->with('changePasswordSuccess', 'Votre demande de réinitialisation de mot de passe a bien été prise en compte. Veuillez vous connecter.');
+                                } else {
+                                    $this->request->redirect('/admin/login')->with('changePasswordSuccess', 'Votre demande de réinitialisation de mot de passe a bien été prise en compte. Veuillez vous connecter.');
+                                }
                             }
                         }
                     }
                 }
+            }
+            else{
+                $form = new UserResetPasswordForm();
+                $userResetPassword = $form->getForm();
+                $this->render("admin/user/resetpassword.phtml", ['errors' => $errors, 'userResetPassword' => $userResetPassword]);
             }
         }
     }
-
 }
