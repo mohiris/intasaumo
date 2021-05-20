@@ -72,9 +72,9 @@ class UserModel extends Model
         return [
             'firstname' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 25],
             'lastname' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 25],
-            'username' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 25],
-            'email' => ['type' => 'email',  'min' => 8, 'required' => 'required', 'max' => 25],
-            'password' => ['type' => 'password',  'min' => 6, 'required' => 'required', 'max' => 25],
+            'username' => ['type' => 'string',  'min' => 3, 'required' => 'required', 'max' => 55],
+            'email' => ['type' => 'email',  'min' => 8, 'required' => 'required', 'max' => 55],
+            'password' => ['type' => 'password',  'min' => 6, 'required' => 'required', 'max' => 55],
             'passwordConfirm' => ['match' => 'password']
         ];
 

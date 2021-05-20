@@ -1,6 +1,5 @@
 <?php
 namespace App\Model;
-use Core\Database\Model;
 use Core\Database\Validator;
 
 class LostPasswordModel
@@ -82,6 +81,5 @@ class LostPasswordModel
         return [
             'email' => ['type' => 'email',  'min' => 8, 'required' => 'required', 'max' => 55],
         ];
-
     }
 }
