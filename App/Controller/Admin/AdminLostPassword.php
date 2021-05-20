@@ -58,8 +58,9 @@ class AdminLostPassword extends Controller
 
                 $data = $this->request->getBody();
                 $emailTo = $data['email'];
+                $errors = $this->validator->validate($this->lostPasswordModel, $data);
 
-                if ($emailTo != null){
+                if(empty($errors)) {
                     if ($emailTo == implode('', $this->userQuery->getEmail($data['email']))) {
 
                         $token = $this->token->generateToken(32);
@@ -88,14 +89,17 @@ class AdminLostPassword extends Controller
                         $this->request->redirect('/admin/lostpassword')->with('noAccountFound', 'Erreur, aucun compte goSchool est relié à l\'email fourni.');
                     }
                 }
-                else {
-                    $this->request->redirect('/admin/lostpassword')->with('noAccountFound', 'Erreur, aucun compte goSchool est relié à l\'email fourni.');
+                else{
+                    $form = new UserLostPasswordForm();
+                    $userLostPassword = $form->getForm();
+
+                    $this->render("admin/user/lostpassword.phtml", ['errors' => $errors, 'userLostPassword'=>$userLostPassword]);
                 }
-            }
-            else {
-                $this->request->redirect('/admin/lostpassword')->with('postError', 'Il y a eu une erreur.');
-            }
         }
+        else {
+            $this->request->redirect('/admin/lostpassword')->with('postError', 'Il y a eu une erreur.');
+            }
+    }
 
     public function indexResetPassword(){
 
