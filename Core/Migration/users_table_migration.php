@@ -18,7 +18,6 @@ class users_table_migration{
             `roles` VARCHAR(16) DEFAULT 'admin',
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        
         ) ENGINE=INNODB CHARSET=`utf8`;";
 
         $conn->exec($sql);
