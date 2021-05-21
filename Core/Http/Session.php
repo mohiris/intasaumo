@@ -7,10 +7,13 @@ class Session{
 
     public function __construct()
     {
+        if (session_status() != PHP_SESSION_NONE) {
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+            session_destroy();
+
         }
+
+        session_start();
 
         $messages = $_SESSION[self::FLASH_KEY] ?? [];
 
@@ -39,7 +42,7 @@ class Session{
         
         $messages = $_SESSION[self::FLASH_KEY] ?? [];
 
-        foreach($messages as $kety => &$message){
+        foreach($messages as $key => &$message){
             if($messages['remove']){
                 unset($messages[$key]);
             }
