@@ -13,6 +13,7 @@ use App\Form\UserLostPasswordForm;
 use Core\Http\Response;
 use App\Query\UserQuery;
 use Core\Util\Hash;
+use Core\Util\Url;
 use Core\Util\TokenGenerator;
 
 class AdminLostPassword extends Controller
@@ -79,10 +80,15 @@ class AdminLostPassword extends Controller
 
                         if($this->lostPasswordQuery->create($data))
                         {
-                            $url = "http://localhost:8080/admin/resetpassword?selector=".$selector."&validator=".$this->token->bin2hex($token);
+                            $urlParams = array(
+                                "selector" => $selector,
+                                "validator" => $this->token->bin2hex($token),
+                            );
+                            $url = new Url();
+                            $generateUrl = $url->generateUrlWithParameters('/admin/resetpassword', $urlParams);
 
                             $email = new UserResetPasswordEmail();
-                            $userResetPasswordEmail = $email->sendEmail($emailTo, $url);
+                            $userResetPasswordEmail = $email->sendEmail($emailTo, $generateUrl);
 
                             $this->request->redirect('/admin/lostpassword')->with('resetEmailSend', 'Succès ! Un email de réinitialisation vous a été envoyé !');
                         }
@@ -115,7 +121,7 @@ class AdminLostPassword extends Controller
                 die('Impossible de valider votre requête');
             }
             else {
-                if (ctype_xdigit($selector) !== false && ctype_xdigit($validator) != false)
+                if (ctype_xdigit($selector) !== false && ctype_xdigit($validator) !== false)
                 {
                     $form = new UserResetPasswordForm();
                     $userResetPassword = $form->getForm();
