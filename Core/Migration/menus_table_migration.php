@@ -13,16 +13,10 @@ class tags_table_migration
             `name` VARCHAR(55) NOT NULL,
             `description` TEXT NULL,
             `link` VARCHAR(255) NOT NULL,
-            `pages_id` BIGINT(20) NOT NULL,
-            `pages_articles_id` BIGINT(20) NOT NULL,
-            `pages_articles_categories_id` BIGINT(20) NOT NULL,
-            `pages_articles_tags_id` BIGINT(20) NOT NULL,
-            INDEX `fk_menus_pages1_idx` (`pages_id` ASC, `pages_articles_id` ASC, `pages_articles_categories_id` ASC, `pages_articles_tags_id` ASC),
-            CONSTRAINT `fk_menus_pages1`
-                FOREIGN KEY (`pages_id` , `pages_articles_id` , `pages_articles_categories_id` , `pages_articles_tags_id`)
-                REFERENCES `pages`(`id` , `articles_id` , `articles_categories_id` , `articles_tags_id`)
-                ON DELETE NO ACTION
-                ON UPDATE NO ACTION
+            `pages_id` BIGINT(20) NULL,
+            `pages_articles_id` BIGINT(20) NULL,
+            `pages_articles_categories_id` BIGINT(20) NULL,
+            `pages_articles_tags_id` BIGINT(20) NULL
         ) ENGINE=INNODB CHARSET=`utf8`;";
         $conn->exec($sql);
     }

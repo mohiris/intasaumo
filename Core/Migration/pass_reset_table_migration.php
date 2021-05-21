@@ -2,12 +2,12 @@
 namespace Core\Migration;
 use Core\Database\DB;
 
-class password_reset_table_migration
+class pass_reset_table_migration
 {
     public function up(){
         $conn = DB::getConnection();
 
-        $sql = "CREATE TABLE password_reset
+        $sql = "CREATE TABLE pass_reset
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
             `email` VARCHAR(55) NOT NULL,

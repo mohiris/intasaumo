@@ -11,16 +11,10 @@ class comments_table_migration
         (
             `id`  BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
             `content` TEXT NULL,
-            `users_id` BIGINT(20) NOT NULL,
-            `comment_parent` BIGINT NULL,
+            `users_id` BIGINT(20) NULL,
+            `comment_parent` BIGINT(20) NULL,
             `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            INDEX `fk_comments_users_idx` (`users_id` ASC),
-            CONSTRAINT `fk_comments_users`
-                FOREIGN KEY (`users_id`)
-                REFERENCES `users` (`id`)
-                ON DELETE NO ACTION
-                ON UPDATE NO ACTION
+            `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=INNODB CHARSET=`utf8`;";
         $conn->exec($sql);
     }

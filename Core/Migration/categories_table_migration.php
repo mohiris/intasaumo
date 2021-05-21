@@ -13,7 +13,7 @@ class categories_table_migration
             `name` VARCHAR(55) NOT NULL,
             `description` TEXT NULL,
             `image` VARCHAR(255) NULL,
-            `categorie_parent` BIGINT NULL
+            `categorie_parent` BIGINT(20) NULL
         ) ENGINE=INNODB CHARSET=`utf8`;";
         $conn->exec($sql);
     }
