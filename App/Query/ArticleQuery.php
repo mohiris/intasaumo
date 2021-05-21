@@ -20,6 +20,7 @@ class ArticleQuery
     public function getById(int $id)
     {
         $query = $this->builder->select("*")->from("articles")->where("id = $id");
+        return $query->getResult();
         return $query->getQuery();
     
     }
@@ -30,7 +31,7 @@ class ArticleQuery
     public function getByTitle(string $title)
     {
         $query = $this->builder->select("*")->from("articles")->where("title = $title");
-        return $query->getQuery();
+        return $query->getResult();
     }
     
     /**
@@ -59,6 +60,16 @@ class ArticleQuery
         $query = $this->builder->delete()->from("articles")->where("id = $id");
     }
 
+
+    /**
+     * @return array $data
+     */
+    public function getArticles()
+    {
+        $query = $this->builder->select('*')->from("articles");
+        return $query->getResult();
+    }
+
     /**
      * @param array $data
      */
@@ -73,6 +84,6 @@ class ArticleQuery
      */
     public function updateArticles(array $data, int $id)
     {
-        $query = $this->builder->update('articles')->set("data = $data")->where("id = $id");
+        $query = $this->builder->update('articles')->set("")->where("id = $id");
     }
 }

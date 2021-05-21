@@ -1,7 +1,7 @@
 <div class="content site--index">
 <?php if(($message = $helper->getFlashMessage('success'))):?>
 <p><?php echo $message;?></p>
-<?php else:?>
+<?php elseif(($message = $helper->getFlashMessage('fail'))):?>
 <p> <?php echo $helper->getFlashMessage('fail');?></p>
 <?php endif;?>
 <p><?= $registerForm; ?></p>
